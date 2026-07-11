@@ -22,7 +22,8 @@ The browser never receives the Supabase service-role key. Role changes, access-m
 | `/forgot-password` | Password recovery request |
 | `/reset-password` | Secure password update after recovery |
 | `/account` | Verified account and approval status |
-| `/arena` | Server-controlled Arena entry and future game host |
+| `/arena` | Server-controlled Arena entry and simulator launch |
+| `/arena/play` | Protected V42.2 ten-round simulator (never served as a public asset) |
 | `/admin` | Admin-only users, roles, access mode, events, and audit history |
 
 ## Local installation
