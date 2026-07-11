@@ -13,5 +13,5 @@ export const siteContent = {
   parent: { label: "A Podscape Labs project", href: "https://podscapelabs.com" },
   supportEmail: "support@podbound.net", // Replace when the support inbox is finalized.
   social: { facebook: "#", discord: "#" }, // Replace with official profiles.
-  testBuild: "Arena foundation / pre-alpha",
+  testBuild: "V42.2 Ten-Round Playtest",
 } as const;
