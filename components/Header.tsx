@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getViewer } from "@/lib/auth";
 
 export async function Header() {
@@ -6,7 +7,7 @@ export async function Header() {
   return (
     <header className="site-header">
       <div className="shell header-inner">
-        <Link className="wordmark" href="/">PodBound™</Link>
+        <Link className="brand-lockup" href="/" aria-label="PodBound home"><span className="isopod-crop header-isopod"><Image src="/assets/logos/podbound-isopod.png" alt="" width={1024} height={450} priority /></span><span className="wordmark">PodBound™</span></Link>
         <nav aria-label="Primary navigation">
           <Link href="/#about">About</Link>
           <Link href="/arena">Arena</Link>
