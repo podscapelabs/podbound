@@ -31,7 +31,7 @@ export default function Home() {
         <div className="shell playtest-grid"><div><p className="eyebrow">Controlled access</p><h2>The PodBound Arena</h2></div><div><p>{siteContent.playtesting}</p><Link className="text-link" href="/arena">Check Arena access →</Link></div></div>
       </section>
 
-      <section className="parent-link shell"><span>PB / PL</span><p>PodBound is the first major project from Podscape Labs.</p><Link href={siteContent.parent.href}>{siteContent.parent.label} ↗</Link></section>
+      <section className="parent-link shell"><span>PB / PL</span><p>PodBound is the first major project from Podscape Labs.</p><a href={siteContent.parent.href}>{siteContent.parent.label} ↗</a></section>
     </main>
   );
 }
