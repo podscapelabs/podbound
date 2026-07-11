@@ -24,6 +24,7 @@ The browser never receives the Supabase service-role key. Role changes, access-m
 | `/account` | Verified account and approval status |
 | `/arena` | Server-controlled Arena entry and simulator launch |
 | `/arena/play` | Protected V42.2 ten-round simulator (never served as a public asset) |
+| `/api/playtest-reports` | Server-authenticated internal playtest report intake |
 | `/admin` | Admin-only users, roles, access mode, events, and audit history |
 
 ## Local installation
@@ -92,6 +93,10 @@ Change mode in `/admin`; no deployment is required. If a public event expires, s
 In `/admin`, configure the title, description, start/end times, guest access, join code, optional unguessable token, capacity, progression flag, and status. Set the event to `active` and the Arena mode to `public_event`.
 
 Guest sessions expire at the event end. Guests do not receive permanent EXP, rewards, founder progress, Podling progress, or account-linked history.
+
+## Playtest reports and watermarks
+
+Run `supabase/migrations/0002_playtest_reports.sql` before enabling report submission. Completed games send their verified audit and voluntary feedback to the server-only `playtest_reports` table. Player-facing JSON downloads and copy controls are intentionally omitted. Each simulator session is watermarked with the display name and a shortened account or guest-session identifier; full internal IDs and email addresses are not rendered.
 
 ## Row Level Security
 

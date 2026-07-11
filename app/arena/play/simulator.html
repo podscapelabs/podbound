@@ -373,6 +373,7 @@ main,#setupScreen,.setup-grid,.setup-card,.setup-forecast-panel{min-height:0;max
   .forecast-card small{font-size:.64rem}
 }
 
+.player-watermark{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));z-index:30;pointer-events:none;user-select:none;padding:6px 9px;border:1px solid rgba(255,255,255,.3);border-radius:7px;background:rgba(16,19,15,.68);color:rgba(255,248,237,.82);font-size:.64rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(5px)}
 </style>
 </head>
 <body>
@@ -486,11 +487,13 @@ main,#setupScreen,.setup-grid,.setup-card,.setup-forecast-panel{min-height:0;max
         </div>
       </article>
       <div id="scoreBreakdowns" class="score-breakdowns"></div>
-      <article class="panel"><span class="eyebrow">Complete game audit</span><h2>Every round and action</h2><div id="finalAuditTable" class="table-wrap"></div><div id="replayResult"></div><div class="result-actions"><button class="btn primary" id="verifyReplay">Verify exact replay</button><button class="btn secondary" id="downloadAudit">Game audit JSON</button><button class="btn secondary" id="downloadPlaytest">Playtest report</button><button class="btn secondary" id="copySummary">Copy summary</button><button class="btn copper" id="playAgain">Rematch</button><button class="btn secondary" id="backSetup">New setup</button></div></article>
+      <article class="panel"><span class="eyebrow">Complete game audit</span><h2>Every round and action</h2><div id="finalAuditTable" class="table-wrap"></div><div id="replayResult"></div><div class="result-actions"><button class="btn primary" id="submitPlaytest">Submit report to Podscape Labs</button><button class="btn secondary" id="verifyReplay">Verify exact replay</button><button class="btn copper" id="playAgain">Rematch</button><button class="btn secondary" id="backSetup">New setup</button></div><div id="submitPlaytestStatus" aria-live="polite"></div></article>
     </section>
   </main>
   <footer class="footer-note">PodBound Player Arena · V42.2 Ten-Round Playtest · desktop scroll + forecast grid · current V42 rules</footer>
 </div>
+
+<div class="player-watermark" id="playerWatermark" aria-label="Playtest session watermark"></div>
 
 <div id="botActionModal" class="bot-action-modal hidden" role="dialog" aria-modal="true" aria-labelledby="botActionTitle">
   <div class="bot-action-card">
@@ -1950,6 +1953,7 @@ if(typeof window!=="undefined")window.PodBoundCore=API;
 </script>
 <script>(()=>{
 "use strict";
+const PLAYER_IDENTITY=__PODBOUND_PLAYER_IDENTITY__;
 const C=window.PodBoundCore;
 const {SPECIES,ENV,TRACKS,ACTIONS,AI_STYLES,SPECIES_KEYS,ENV_KEYS,ROUND_COUNT,ENGINE_NAME,ENGINE_VERSION,botPolicyLabel,hashString,rngFrom,shuffle,finalScore}=C;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -2315,8 +2319,7 @@ function renderResult(){
   $("#integrityReport").innerHTML=result.valid?`<div class="notice good"><b>Integrity passed:</b> ${ROUND_COUNT} rounds, ${ROUND_COUNT} actions per colony, Population and Stress reconciled, final scores verified.</div>`:`<div class="notice bad"><b>Integrity failed:</b> ${result.integrity.errors.map(esc).join(" · ")}</div>`;
   if(result.suspiciousWarnings.length)$("#integrityReport").insertAdjacentHTML("beforeend",`<div class="notice warn"><b>Warnings:</b> ${result.suspiciousWarnings.map(esc).join(" · ")}</div>`);
   bindPlaytestFeedback();
-  $("#verifyReplay").onclick=verifyReplay;$("#downloadAudit").onclick=downloadAudit;
-  $("#downloadPlaytest").onclick=downloadPlaytestReport;$("#copySummary").onclick=copyPlaytestSummary;
+  $("#submitPlaytest").onclick=submitPlaytestReport;$("#verifyReplay").onclick=verifyReplay;
   $("#playAgain").onclick=()=>{$("#resultScreen").classList.add("hidden");$("#gameScreen").classList.remove("hidden");startSameSetup()};
   $("#backSetup").onclick=resetToSetup;
 }
@@ -2345,6 +2348,24 @@ function playtestReport(){
     feedback:cloneData(playtest),
     game:result
   };
+}
+async function submitPlaytestReport(){
+  const button=$("#submitPlaytest"),status=$("#submitPlaytestStatus");
+  button.disabled=true;button.textContent="Submitting report…";
+  status.innerHTML='<div class="notice">Saving the verified game audit and your feedback…</div>';
+  try{
+    const response=await fetch("/api/playtest-reports",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      credentials:"same-origin",body:JSON.stringify(playtestReport())
+    });
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.error||"The report could not be saved.");
+    button.textContent="Report submitted";
+    status.innerHTML='<div class="notice good"><b>Report received.</b> Thank you—this game is now in the Podscape Labs playtest records.</div>';
+  }catch(error){
+    button.disabled=false;button.textContent="Try submitting again";
+    status.innerHTML=`<div class="notice bad"><b>Submission failed:</b> ${esc(error.message||"Please try again.")}</div>`;
+  }
 }
 function downloadPlaytestReport(){
   const safe=(playtest.testName||result.gameId).replace(/[^a-z0-9_-]+/gi,"-").replace(/^-|-$/g,"");
@@ -2419,6 +2440,8 @@ window.addEventListener("load",releaseStaleScrollLock,{once:true});
 window.addEventListener("resize",releaseStaleScrollLock);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)releaseStaleScrollLock()});
 
+const watermark=document.getElementById("playerWatermark");
+if(watermark)watermark.textContent=`${PLAYER_IDENTITY.displayName} · PB-${PLAYER_IDENTITY.shortId}`;
 if(document.readyState === "loading"){
   document.addEventListener("DOMContentLoaded", init, {once:true});
 }else{

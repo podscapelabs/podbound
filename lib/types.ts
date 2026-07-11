@@ -37,3 +37,22 @@ export type PodboundEvent = {
   created_at: string;
   updated_at: string;
 };
+
+export type PlaytestReport = {
+  id: string;
+  player_label: string;
+  game_id: string;
+  build_version: string;
+  submitted_at: string;
+  report: {
+    feedback?: {
+      overallFeel?: string;
+      highlight?: string;
+      confusion?: string;
+    };
+    game?: {
+      scores?: number[];
+      valid?: boolean;
+    };
+  };
+};
