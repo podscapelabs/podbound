@@ -98,6 +98,10 @@ Guest sessions expire at the event end. Guests do not receive permanent EXP, rew
 
 Run `supabase/migrations/0002_playtest_reports.sql` before enabling report submission. Completed games send their verified audit and voluntary feedback to the server-only `playtest_reports` table. Player-facing JSON downloads and copy controls are intentionally omitted. Each simulator session is watermarked with the display name and a shortened account or guest-session identifier; full internal IDs and email addresses are not rendered.
 
+## Required playtest agreement
+
+Run `supabase/migrations/0003_playtest_agreements.sql` before deploying the agreement gate. Every account and temporary guest session must accept the current version in `lib/playtest-agreement.ts` before the Arena dashboard, simulator route, or report endpoint will allow access. Acceptance is timestamped server-side; changing the agreement version requires acceptance again.
+
 ## Row Level Security
 
 The migration enables RLS on every application table. Authenticated users may read only their own profile. No client policy permits role or approval updates. Settings, events, guests, rate-limit records, and audit logs are accessed only by reviewed server code using the service role.

@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { evaluateArenaAccess } from "@/lib/access";
 import { getViewer } from "@/lib/auth";
-import { clearGuestSession, createGuestSession } from "@/lib/guest";
+import { clearGuestSession, createGuestSession, getGuestSession } from "@/lib/guest";
+import { recordPlaytestAgreement } from "@/lib/playtest-agreement";
 
 export async function enterAsGuest(formData: FormData) {
   const displayName = String(formData.get("displayName") || "").trim();
@@ -18,3 +19,14 @@ export async function enterAsGuest(formData: FormData) {
 }
 
 export async function leaveEvent() { await clearGuestSession(); redirect("/"); }
+
+export async function acceptPlaytestAgreement(formData: FormData) {
+  if (formData.get("agreementAccepted") !== "yes") redirect("/arena?error=agreement-required");
+  const { user, profile } = await getViewer();
+  const decision = await evaluateArenaAccess(profile);
+  if (!decision.allowed) redirect("/arena");
+  const guest = user ? null : await getGuestSession();
+  if (decision.kind === "guest" && !guest) redirect("/arena");
+  await recordPlaytestAgreement(user?.id || null, guest?.id || null);
+  redirect("/arena");
+}

@@ -1,7 +1,9 @@
 import { readFile } from "node:fs/promises";
+import { NextRequest } from "next/server";
 import { evaluateArenaAccess } from "@/lib/access";
 import { getViewer } from "@/lib/auth";
 import { getGuestSession } from "@/lib/guest";
+import { hasAcceptedPlaytestAgreement } from "@/lib/playtest-agreement";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -12,7 +14,7 @@ function safeJson(value: unknown) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const { user, profile } = await getViewer();
   const decision = await evaluateArenaAccess(profile);
 
@@ -29,6 +31,10 @@ export async function GET() {
       status: 401,
       headers: { "Cache-Control": "private, no-store" },
     });
+  }
+
+  if (!(await hasAcceptedPlaytestAgreement(user?.id || null, guest?.id || null))) {
+    return Response.redirect(new URL("/arena?notice=agreement-required", request.url), 303);
   }
 
   const playerId = user?.id || guest?.id || "unknown";
