@@ -3,6 +3,7 @@ import { evaluateArenaAccess } from "@/lib/access";
 import { getViewer } from "@/lib/auth";
 import { getGuestSession } from "@/lib/guest";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { hasAcceptedPlaytestAgreement } from "@/lib/playtest-agreement";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -32,6 +33,9 @@ export async function POST(request: NextRequest) {
   const guest = user ? null : await getGuestSession();
   if (decision.kind === "guest" && !guest) {
     return Response.json({ error: "A valid event guest session is required." }, { status: 401 });
+  }
+  if (!(await hasAcceptedPlaytestAgreement(user?.id || null, guest?.id || null))) {
+    return Response.json({ error: "The current playtest agreement must be accepted." }, { status: 403 });
   }
 
   let body: unknown;
