@@ -15,10 +15,6 @@ export default function Home() {
             <p className="hero-description">{siteContent.brand.description}</p>
             <div className="actions"><Link className="button primary" href="/arena">Enter the Arena</Link><Link className="button secondary" href="#about">Learn about PodBound</Link></div>
           </div>
-          <div className="hero-art isopod-hero">
-            <div className="isopod-crop hero-isopod"><Image src="/assets/logos/podbound-isopod.png" alt="Illustrated isopod, the PodBound emblem" width={1024} height={450} priority /></div>
-            <small>Official PodBound isopod mark</small>
-          </div>
         </div>
       </section>
 
