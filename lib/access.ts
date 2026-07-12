@@ -10,9 +10,5 @@ export async function evaluateArenaAccess(profile: Profile | null): Promise<Aren
   const admin = createAdminClient();
   const { data: rawSettings } = await admin.from("arena_settings").select("*").eq("id", 1).single();
   const settings = rawSettings as ArenaSettings | null;
-  const { data } = await admin.from("events").select("*")
-    .eq("status", "active")
-    .order("starts_at", { ascending: false }).limit(1).maybeSingle();
-  const event = data as PodboundEvent | null;
-  return decideArenaAccess({ settings, event, profile });
+  return decideArenaAccess({ settings, event: null, profile });
 }
