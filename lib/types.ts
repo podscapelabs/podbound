@@ -22,6 +22,14 @@ export type ArenaSettings = {
   updated_by: string | null;
 };
 
+export type SiteSettings = {
+  id: number;
+  maintenance_enabled: boolean;
+  maintenance_message: string;
+  updated_at: string;
+  updated_by: string | null;
+};
+
 export type PodboundEvent = {
   id: string;
   title: string;
