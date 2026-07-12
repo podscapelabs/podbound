@@ -1,0 +1,171 @@
+.badgeWrap {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  justify-content: center;
+}
+
+.badge {
+  --badge-width: clamp(17rem, 42vw, 31rem);
+  --badge-colour: #e6dcc8;
+  --badge-ink: #25231f;
+  position: relative;
+  display: inline-grid;
+  width: var(--badge-width);
+  max-width: 100%;
+  aspect-ratio: 2400 / 452;
+  place-items: center;
+  color: var(--badge-ink);
+  isolation: isolate;
+}
+
+.small { --badge-width: clamp(12.5rem, 38vw, 18rem); }
+.medium { --badge-width: clamp(17rem, 56vw, 31rem); }
+.large { --badge-width: clamp(20rem, 86vw, 40rem); }
+
+.parchment { --badge-colour: #e6dcc8; --badge-ink: #25231f; }
+.green { --badge-colour: #667e69; --badge-ink: #fffaf0; }
+.bronze { --badge-colour: #a65d35; --badge-ink: #fff8ed; }
+.silver { --badge-colour: #bfc2bd; --badge-ink: #25231f; }
+.gold { --badge-colour: #c49a48; --badge-ink: #201d17; }
+.rare-green { --badge-colour: #263f31; --badge-ink: #f5ebcf; }
+.locked-grey { --badge-colour: #8f918c; --badge-ink: #f4f1e9; }
+
+.colourField {
+  position: absolute;
+  inset: 7.5% 1.2%;
+  z-index: -2;
+  background: var(--badge-colour);
+  clip-path: polygon(3.7% 0, 96.3% 0, 97% 12%, 99% 24%, 99% 76%, 97% 88%, 96.3% 100%, 3.7% 100%, 3% 88%, 1% 76%, 1% 24%, 3% 12%);
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.content {
+  display: flex;
+  width: 78%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+}
+
+.titleRow {
+  display: flex;
+  max-width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(.22rem, 1.2vw, .55rem);
+}
+
+.title {
+  overflow: hidden;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(.72rem, 2.4vw, 1.42rem);
+  font-weight: 700;
+  letter-spacing: .025em;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.small .title { font-size: clamp(.62rem, 2.1vw, .88rem); }
+.large .title { font-size: clamp(.88rem, 2.8vw, 1.72rem); }
+
+.subtitle {
+  max-width: 82%;
+  margin-top: clamp(.08rem, .5vw, .28rem);
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(.42rem, 1.18vw, .68rem);
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rarity {
+  margin-bottom: clamp(.06rem, .35vw, .2rem);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(.36rem, 1vw, .58rem);
+  font-weight: 800;
+  letter-spacing: .13em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.icon,
+.lockIcon {
+  flex: 0 0 auto;
+  width: clamp(.68rem, 2vw, 1.12rem);
+  height: clamp(.68rem, 2vw, 1.12rem);
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(.58rem, 1.7vw, .92rem);
+  line-height: 1;
+}
+
+.lockIcon { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+
+.locked { filter: saturate(.12); }
+.locked .frame,
+.locked .content { opacity: .72; }
+
+.tooltip {
+  position: absolute;
+  z-index: 20;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  width: min(18rem, 85vw);
+  padding: 10px 12px;
+  border: 1px solid #b8ad98;
+  background: #25231f;
+  color: #faf6ec;
+  font-size: .72rem;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  transform: translate(-50%, 5px);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.badgeWrap:hover .tooltip,
+.badgeWrap:focus-within .tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.badge:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid #304637;
+  outline-offset: 5px;
+}
+
+@media (max-width: 420px) {
+  .badge { --badge-width: min(100%, 20rem); }
+  .small { --badge-width: min(100%, 15rem); }
+  .large { --badge-width: min(100%, 22rem); }
+  .content { width: 74%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip { transition: none; }
+}
