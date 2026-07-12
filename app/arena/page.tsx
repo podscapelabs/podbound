@@ -38,6 +38,7 @@ export default async function ArenaPage() {
 
   const displayName = profile?.display_name || guest?.display_name || user?.email || "Guest researcher";
   const role = profile?.role || "event guest";
+  const accessModeLabel = decision.mode === "closed" ? "closed" : decision.mode === "invite_only" ? "playtester access" : "open to accounts";
   const admin = createAdminClient();
   let reportsQuery = admin.from("playtest_reports")
     .select("id, player_label, game_id, build_version, submitted_at, report", { count: "exact" })
@@ -47,7 +48,7 @@ export default async function ArenaPage() {
   const reports = (rawReports || []) as PlaytestReport[];
 
   return <main id="main" className="dashboard shell">
-    <div className="dashboard-heading"><p className="eyebrow">PodBound Arena</p><h1>Welcome, {displayName}</h1><p>{role.replace("_", " ")} · {decision.mode.replace("_", " ")}</p></div>
+    <div className="dashboard-heading"><p className="eyebrow">PodBound Arena</p><h1>Welcome, {displayName}</h1><p>{role.replace("_", " ")} · {accessModeLabel}</p></div>
     <section className="dashboard-launch"><div><p className="eyebrow">Current controlled build</p><h2>{siteContent.testBuild}</h2><p>Play a verified ten-round game, add your observations, and submit the report directly to Podscape Labs.</p></div><Link className="button primary" href="/arena/play">Launch PodBound</Link></section>
     <div className="record-grid arena-records"><article className="record"><span>Arena access</span><strong>{role === "admin" ? "Administrator" : role === "playtester" ? "Approved playtester" : "Event guest"}</strong></article><article className="record"><span>Agreement</span><strong>Current version accepted</strong></article><article className="record"><span>Reports submitted</span><strong>{reportCount || 0}</strong></article><article className="record"><span>Latest activity</span><strong>{reports[0] ? new Date(reports[0].submitted_at).toLocaleDateString("en-CA") : "No submitted games"}</strong></article></div>
     <section className="dashboard-history"><div className="dashboard-section-title"><div><p className="eyebrow">Your records</p><h2>Recent submitted games</h2></div><span>{reportCount || 0} total</span></div>{reports.length ? <div className="game-history-list">{reports.map((item) => <article key={item.id}><div><strong>{item.game_id}</strong><span>{new Date(item.submitted_at).toLocaleString("en-CA")}</span></div><div><b>{item.report.game?.scores?.join("–") || "Scores unavailable"}</b><span>{item.report.game?.valid === false ? "Integrity warning" : "Verified game"}</span></div><div><span>{item.report.feedback?.overallFeel || "No overall rating"}</span><span>{item.build_version}</span></div></article>)}</div> : <p className="dashboard-empty">Complete a game and submit its report to start your playtest history.</p>}</section>
