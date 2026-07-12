@@ -1,0 +1,29 @@
+.sectionIntro { max-width: 680px; color: var(--muted); }
+.accessGrid { display: grid; gap: 12px; margin-top: 22px; }
+.accessGrid form { min-width: 0; }
+.accessOption { display: grid; width: 100%; min-height: 112px; align-content: center; gap: 5px; padding: 18px; border: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+.accessOption strong { font-family: Georgia, "Times New Roman", serif; font-size: 1.25rem; font-weight: 400; }
+.accessOption span { color: var(--muted); font-size: .76rem; }
+.accessOption small { margin-top: 6px; color: var(--forest); font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.accessOption:hover { background: var(--paper); }
+.accessOption.active { border-color: var(--forest); background: var(--forest); color: var(--cream); }
+.accessOption.active span,.accessOption.active small { color: rgba(250,246,236,.75); }
+.userSection { padding: 0; }
+.userSection summary { padding: 28px; cursor: pointer; list-style-position: inside; }
+.userSection summary>span { display: inline-flex; flex-direction: column; gap: 3px; margin-left: 8px; }
+.userSection summary strong { font-family: Georgia, "Times New Roman", serif; font-size: 1.8rem; font-weight: 400; }
+.userSection summary small { color: var(--muted); font-size: .7rem; text-transform: uppercase; }
+.userContent { padding: 0 28px 28px; border-top: 1px solid var(--line); }
+.userList { display: grid; margin-top: 20px; }
+.userRow { display: grid; gap: 14px; padding: 20px 0; border-top: 1px solid var(--line); }
+.userRow:first-child { border-top: 0; }
+.userRow>div { display: flex; min-width: 0; flex-direction: column; }
+.userRow>div span { overflow: hidden; color: var(--muted); font-size: .75rem; text-overflow: ellipsis; }
+.userRow form { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.userRow select { min-height: 44px; min-width: 160px; padding: 8px 34px 8px 10px; border: 1px solid var(--line); background: #fffdf7; color: var(--ink); }
+
+@media (min-width: 720px) {
+  .accessGrid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .userRow { grid-template-columns: minmax(220px,1fr) auto; align-items: center; }
+  .userRow form { justify-content: flex-end; }
+}

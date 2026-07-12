@@ -33,8 +33,9 @@ export async function updateArenaMode(formData: FormData) {
   if (!["closed", "invite_only", "public_event"].includes(mode)) return;
   const admin = createAdminClient();
   const { data: previous } = await admin.from("arena_settings").select("*").eq("id", 1).single();
-  await admin.from("arena_settings").update({ access_mode: mode, updated_by: actor.id, updated_at: new Date().toISOString() }).eq("id", 1);
-  await audit(actor.id, "arena_mode_changed", null, previous, { access_mode: mode });
+  const next = { access_mode: mode, guest_access_enabled: false, updated_by: actor.id, updated_at: new Date().toISOString() };
+  await admin.from("arena_settings").update(next).eq("id", 1);
+  await audit(actor.id, "arena_mode_changed", null, previous, next);
   revalidatePath("/admin"); revalidatePath("/arena");
 }
 
