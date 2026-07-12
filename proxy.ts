@@ -18,6 +18,24 @@ export async function proxy(request: NextRequest) {
     },
   });
   await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+  const maintenanceBypass = pathname === "/maintenance" || pathname === "/admin" || pathname.startsWith("/admin/") || pathname === "/sign-in" || pathname === "/forgot-password" || pathname === "/reset-password" || pathname.startsWith("/auth/");
+  if (!maintenanceBypass) {
+    const { data, error } = await supabase.from("site_settings").select("maintenance_enabled").eq("id", 1).maybeSingle();
+    if (!error && data?.maintenance_enabled) {
+      if (pathname.startsWith("/api/")) {
+        return Response.json({ error: "PodBound is temporarily unavailable for maintenance." }, { status: 503, headers: { "Retry-After": "300", "Cache-Control": "no-store" } });
+      }
+      const maintenanceUrl = request.nextUrl.clone();
+      maintenanceUrl.pathname = "/maintenance";
+      maintenanceUrl.search = "";
+      const maintenanceResponse = NextResponse.redirect(maintenanceUrl, 307);
+      maintenanceResponse.headers.set("Cache-Control", "no-store");
+      maintenanceResponse.headers.set("Retry-After", "300");
+      return maintenanceResponse;
+    }
+  }
   return response;
 }
 
