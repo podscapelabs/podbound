@@ -38,6 +38,19 @@ export async function updateArenaMode(formData: FormData) {
   revalidatePath("/admin"); revalidatePath("/arena");
 }
 
+export async function setMaintenanceMode(formData: FormData) {
+  const { profile: actor } = await requireAdmin();
+  const enabled = formData.get("enabled") === "true";
+  const admin = createAdminClient();
+  const { data: previous } = await admin.from("site_settings").select("*").eq("id", 1).single();
+  const next = { maintenance_enabled: enabled, updated_by: actor.id, updated_at: new Date().toISOString() };
+  const { error } = await admin.from("site_settings").update(next).eq("id", 1);
+  if (error) throw new Error("Maintenance mode could not be changed. Confirm migration 0005 has been applied.");
+  await audit(actor.id, enabled ? "site_maintenance_enabled" : "site_maintenance_disabled", null, previous, next);
+  revalidatePath("/admin");
+  revalidatePath("/maintenance");
+}
+
 export async function saveEvent(formData: FormData) {
   const { profile: actor } = await requireAdmin();
   const id = String(formData.get("id") || "");
