@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://podbound.net"),
   title: "PodBound | Field Archives",
-  description: "The official PodBound website and controlled playtesting Arena.",
+  description: "The official PodBound website and controlled playtesting Field.",
   openGraph: { title: "PodBound™", description: "Forecast. Adapt. Grow.", type: "website", locale: "en_CA" },
 };
 
