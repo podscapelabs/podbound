@@ -1,13 +1,13 @@
 # PodBound
 
-Production foundation for the official PodBound™ website, controlled playtesting Arena, and future migration of the existing HTML/CSS/JavaScript game.
+Production foundation for the official PodBound™ website, controlled PodBound Field playtesting, and future migration of the existing HTML/CSS/JavaScript game.
 
 ## Architecture
 
 - Next.js App Router, TypeScript, and server components
 - Supabase Auth for verified email/password accounts and secure cookie sessions
-- Supabase Postgres for profiles, roles, Arena settings, public events, guest sessions, audit records, and server-backed rate limits
-- Server-side access evaluation for every Arena and administration request
+- Supabase Postgres for profiles, roles, Field access settings, public events, guest sessions, audit records, and server-backed rate limits
+- Server-side access evaluation for every PodBound Field and administration request
 - Vercel deployment at `podbound.net`
 
 The browser never receives the Supabase service-role key. Role changes, access-mode changes, event administration, guest capacity, and event timing are enforced on the server.
@@ -18,11 +18,11 @@ The browser never receives the Supabase service-role key. Role changes, access-m
 | --- | --- |
 | `/` | Public PodBound landing page |
 | `/register` | Verified email/password registration |
-| `/sign-in` | Account login with Arena return path |
+| `/sign-in` | Account login with PodBound Field return path |
 | `/forgot-password` | Password recovery request |
 | `/reset-password` | Secure password update after recovery |
 | `/account` | Verified account and approval status |
-| `/arena` | Server-controlled Arena entry and simulator launch |
+| `/arena` | Server-controlled PodBound Field entry and simulator launch |
 | `/arena/play` | Protected V42.2 ten-round simulator (never served as a public asset) |
 | `/api/playtest-reports` | Server-authenticated internal playtest report intake |
 | `/admin` | Admin-only users, roles, access mode, events, and audit history |
@@ -80,7 +80,7 @@ The application prevents the final remaining administrator from being demoted.
 
 Open `/admin`, search by email or display name, and choose **Approve**. Revoking access returns the account to `registered`. Every role change is recorded in `admin_audit_log`.
 
-## Arena access modes
+## PodBound Field access modes
 
 - `closed`: only admins enter. Everyone else receives the closure notice.
 - `invite_only`: verified playtesters and admins enter; registered accounts remain pending.
@@ -90,7 +90,7 @@ Change mode in `/admin`; no deployment is required. If a public event expires, s
 
 ## Public events
 
-In `/admin`, configure the title, description, start/end times, guest access, join code, optional unguessable token, capacity, progression flag, and status. Set the event to `active` and the Arena mode to `public_event`.
+In `/admin`, configure the title, description, start/end times, guest access, join code, optional unguessable token, capacity, progression flag, and status. Set the event to `active` and the Field access mode to `public_event`.
 
 Guest sessions expire at the event end. Guests do not receive permanent EXP, rewards, founder progress, Podling progress, or account-linked history.
 
@@ -100,7 +100,7 @@ Run `supabase/migrations/0002_playtest_reports.sql` before enabling report submi
 
 ## Required playtest agreement
 
-Run `supabase/migrations/0003_playtest_agreements.sql` before deploying the agreement gate. Every account and temporary guest session must accept the current version in `lib/playtest-agreement.ts` before the Arena dashboard, simulator route, or report endpoint will allow access. Acceptance is timestamped server-side; changing the agreement version requires acceptance again.
+Run `supabase/migrations/0003_playtest_agreements.sql` before deploying the agreement gate. Every account and temporary guest session must accept the current version in `lib/playtest-agreement.ts` before the Field dashboard, simulator route, or report endpoint will allow access. Acceptance is timestamped server-side; changing the agreement version requires acceptance again.
 
 ## Row Level Security
 
@@ -117,7 +117,7 @@ public/assets/
 │   └── podscape-labs-wordmark.png # add when supplied
 ├── photos/
 │   ├── landing-hero.jpg           # add official landing artwork
-│   └── arena-background.jpg       # add official Arena artwork
+│   └── arena-background.jpg       # legacy filename for official Field artwork
 ├── cards/                         # official card faces
 ├── species/                       # official species artwork
 ├── environments/                  # official environment artwork
@@ -138,7 +138,7 @@ Missing imagery is represented by labelled interface placeholders. No AI-generat
 
 ## Migrating the existing game
 
-Move the game's modules and assets into an Arena-owned feature directory and render them inside `/arena` after the existing server-side access decision succeeds. Keep game APIs behind authenticated server routes. Do not iframe the old site. The first migration step should inventory global scripts, browser storage, asset paths, and DOM assumptions before converting the game to modules.
+Move the game's modules and assets into a Field-owned feature directory and render them inside the compatibility route `/arena` after the existing server-side access decision succeeds. Keep game APIs behind authenticated server routes. Do not iframe the old site. The first migration step should inventory global scripts, browser storage, asset paths, and DOM assumptions before converting the game to modules.
 
 ## Future data
 
