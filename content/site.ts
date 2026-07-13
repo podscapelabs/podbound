@@ -11,7 +11,7 @@ export const siteContent = {
   playtesting:
     "The PodBound Field is currently used for controlled and event-based playtesting.",
   parent: { label: "A Podscape Labs project", href: "https://www.podscapelabs.com" },
-  supportEmail: "support@podbound.net", // Replace when the support inbox is finalized.
+  supportEmail: "podscapelabs@gmail.com", // Temporary until the PodBound support inbox is active.
   social: { facebook: "#", discord: "#" }, // Replace with official profiles.
   testBuild: "V42.2 Ten-Round Playtest",
 } as const;
