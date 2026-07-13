@@ -21,9 +21,14 @@
 .userRow>div span { overflow: hidden; color: var(--muted); font-size: .75rem; text-overflow: ellipsis; }
 .userRow form { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .userRow select { min-height: 44px; min-width: 160px; padding: 8px 34px 8px 10px; border: 1px solid var(--line); background: #fffdf7; color: var(--ink); }
+.reportPreview { display:grid;gap:20px;align-items:center; }
+.reportPreview .eyebrow { margin-bottom:8px; }
+.reportPreview h2 { margin-bottom:8px; }
+.reportPreview p:last-child { margin-bottom:0;color:var(--muted); }
 
 @media (min-width: 720px) {
   .accessGrid { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .userRow { grid-template-columns: minmax(220px,1fr) auto; align-items: center; }
   .userRow form { justify-content: flex-end; }
+  .reportPreview { grid-template-columns:1fr auto; }
 }
