@@ -1,4 +1,9 @@
 .sectionIntro { max-width: 680px; color: var(--muted); }
+.overviewGrid { display:grid;gap:14px;margin-top:34px; }
+.overviewCard { min-width:0;padding:22px;border:1px solid var(--line);background:var(--cream); }
+.overviewCard span { display:block;color:var(--muted);font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }
+.overviewCard strong { display:block;margin:8px 0 16px;font-family:Georgia,"Times New Roman",serif;font-size:1.6rem;font-weight:400;overflow-wrap:anywhere; }
+.overviewCard a { color:var(--forest);font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase; }
 .accessGrid { display: grid; gap: 12px; margin-top: 22px; }
 .accessGrid form { min-width: 0; }
 .accessOption { display: grid; width: 100%; min-height: 112px; align-content: center; gap: 5px; padding: 18px; border: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
@@ -27,8 +32,11 @@
 .modulePreview p:last-child { margin-bottom:0;color:var(--muted); }
 
 @media (min-width: 720px) {
+  .overviewGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .accessGrid { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .userRow { grid-template-columns: minmax(220px,1fr) auto; align-items: center; }
   .userRow form { justify-content: flex-end; }
   .modulePreview { grid-template-columns:1fr auto; }
 }
+
+@media (min-width: 1040px) { .overviewGrid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
