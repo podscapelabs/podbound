@@ -37,7 +37,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       }
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
-      setMessage("Password updated. You can continue to the Arena.");
+      setMessage("Password updated. You can continue to the PodBound Field.");
     } catch (error) { setMessage(error instanceof Error ? error.message : "Something went wrong."); }
     finally { setPending(false); }
   }
