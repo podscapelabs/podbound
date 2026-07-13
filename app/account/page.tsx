@@ -4,7 +4,6 @@ import { requireUser } from "@/lib/auth";
 import { hasAcceptedPlaytestAgreement, PLAYTEST_AGREEMENT } from "@/lib/playtest-agreement";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PlaytestReport } from "@/lib/types";
-import { siteContent } from "@/content/site";
 import { signOut, updateDisplayName } from "./actions";
 import styles from "./page.module.css";
 
@@ -45,8 +44,6 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     ? new Date(reports[0].submitted_at).toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" })
     : "No submitted games";
   const shortId = user.id.replace(/-/g, "").slice(0, 8).toUpperCase();
-  const deletionHref = `mailto:${siteContent.supportEmail}?subject=${encodeURIComponent("PodBound account deletion request")}&body=${encodeURIComponent(`Please delete the PodBound account associated with this email address. Account reference: ${shortId}`)}`;
-
   return <main id="main" className="dashboard shell">
     <header className="dashboard-heading">
       <p className="eyebrow">PodBound account record</p>
@@ -93,7 +90,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       <div className={styles.securityGrid}>
         <article className={styles.securityCard}><h3>PodBound Field</h3><p>Review your current access state and enter the controlled simulator.</p><Link className="button primary" href="/arena">Check Field access</Link></article>
         <article className={styles.securityCard}><h3>Account security</h3><p>Request a secure recovery link to update your password.</p><Link className="button secondary" href="/forgot-password">Reset password</Link></article>
-        <article className={styles.securityCard}><h3>Account deletion</h3><p>Ask Podscape Labs to remove your account and associated personal data.</p><a className="button secondary" href={deletionHref}>Request deletion</a></article>
+        <article className={styles.securityCard}><h3>Account deletion</h3><p>Ask Podscape Labs to remove your account and associated personal data.</p><Link className="button secondary" href="/account/delete">Request deletion</Link></article>
       </div>
     </section>
 
