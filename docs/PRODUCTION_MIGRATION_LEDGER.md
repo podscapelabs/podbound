@@ -32,7 +32,28 @@ Verified on 2026-07-13:
 - two maintenance actions are present in `admin_audit_log`.
 - the latest maintenance action was recorded on 2026-07-12 and includes an administrator identity.
 
-This proves that the admin action has successfully updated and audited the production setting. A controlled end-to-end redirect test is still required to prove that production proxy routing reacts correctly while the value is enabled.
+This proves that the admin action has successfully updated and audited the production setting.
+
+### Controlled end-to-end test
+
+Completed on 2026-07-13 using a temporary maintenance state. The original `maintenance_enabled`, `updated_at`, and `updated_by` values were restored exactly after testing.
+
+While maintenance was enabled:
+
+- `/` returned `307` to `/maintenance`;
+- `/arena/play` returned `307` to `/maintenance`;
+- `/api/playtest-reports` returned `503`;
+- `/admin` bypassed maintenance and returned its normal sign-in redirect.
+
+After restoration:
+
+- `/` returned `200`;
+- `/arena/play` returned its normal anonymous `401`;
+- `/api/playtest-reports` returned its normal `405` for an unsupported GET request;
+- `/admin` returned its normal sign-in redirect;
+- the production settings row again contained the exact original values.
+
+Maintenance mode is therefore confirmed to be enforced by the production request proxy for public pages, protected direct routes, and API routes while preserving the administrator route.
 
 ## Rules for future migrations
 
@@ -47,6 +68,5 @@ This proves that the admin action has successfully updated and audited the produ
 ## Recommended follow-up
 
 - establish a repeatable migration deployment process before adding shared-platform tables;
-- perform a controlled maintenance-mode redirect test during an approved short test window;
 - verify the production access-mode row and direct-route enforcement for PodBound Field;
 - review authentication email limits and resend behavior.
