@@ -27,6 +27,7 @@ The browser never receives the Supabase service-role key. Role changes, access-m
 | `/arena/play` | Protected V42.2 ten-round simulator (never served as a public asset) |
 | `/api/playtest-reports` | Server-authenticated internal playtest report intake |
 | `/admin` | Admin-only users, roles, access mode, events, and audit history |
+| `/admin/users` | Admin-only registered-user search, role filters, and access management |
 | `/admin/reports` | Admin-only playtest report inbox, filters, feedback, and game audits |
 | `/admin/reports/[id]` | Admin-only complete submitted game-audit record |
 | `/privacy` | Privacy Policy |
