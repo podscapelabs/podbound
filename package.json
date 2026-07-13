@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test:access": "node --experimental-strip-types scripts/check-access-policy.ts"
+    "test:access": "node --experimental-strip-types scripts/check-access-policy.ts",
+    "test:my-lab": "node --experimental-strip-types scripts/check-my-lab-schema.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
