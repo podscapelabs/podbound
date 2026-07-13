@@ -4,7 +4,7 @@ import { evaluateArenaAccess } from "@/lib/access";
 import { getViewer } from "@/lib/auth";
 import { getGuestSession } from "@/lib/guest";
 import { signOut } from "@/app/account/actions";
-import { hasAcceptedPlaytestAgreement, PLAYTEST_AGREEMENT } from "@/lib/playtest-agreement";
+import { hasAcceptedPlaytestAgreement, PLAYTEST_AGREEMENT, PUBLIC_TESTING_NOTICE } from "@/lib/playtest-agreement";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PlaytestReport } from "@/lib/types";
 import { acceptPlaytestAgreement, enterAsGuest, leaveEvent } from "./actions";
@@ -23,8 +23,8 @@ export default async function ArenaPage() {
   const guest = user ? null : await getGuestSession();
 
   if (!decision.allowed) {
-    if (decision.reason === "login_required") return <main id="main" className="access-page shell"><p className="eyebrow">Field access</p><h1>Sign in required</h1><p>Sign in to continue. New accounts remain pending until approved for invite-only playtesting.</p><div className="actions"><Link className="button primary" href="/sign-in?returnTo=/arena">Sign in</Link><Link className="button secondary" href="/register">Register</Link></div></main>;
-    return <main id="main" className="access-page shell"><p className="eyebrow">Field access</p><h1>Access notice</h1><p>{messages[decision.reason]}</p><Link className="text-link" href="/">Return to the field archive →</Link></main>;
+    if (decision.reason === "login_required") return <main id="main" className="access-page shell"><p className="eyebrow">Field access</p><h1>Sign in required</h1><p>Sign in to continue. New accounts remain pending until approved for invite-only playtesting.</p><div className="testing-notice"><strong>Temporary public test</strong><p>{PUBLIC_TESTING_NOTICE}</p><p><Link href="/testing-disclaimer">Testing Disclaimer</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link></p></div><div className="actions"><Link className="button primary" href="/sign-in?returnTo=/arena">Sign in</Link><Link className="button secondary" href="/register">Register</Link></div></main>;
+    return <main id="main" className="access-page shell"><p className="eyebrow">Field access</p><h1>Access notice</h1><p>{messages[decision.reason]}</p><div className="testing-notice"><strong>Temporary public test</strong><p>{PUBLIC_TESTING_NOTICE}</p><p><Link href="/testing-disclaimer">Read the testing disclaimer</Link></p></div><Link className="text-link" href="/">Return to the field archive →</Link></main>;
   }
 
   if (decision.kind === "guest" && !guest) {
@@ -33,7 +33,7 @@ export default async function ArenaPage() {
 
   const agreementAccepted = await hasAcceptedPlaytestAgreement(user?.id || null, guest?.id || null);
   if (!agreementAccepted) {
-    return <main id="main" className="agreement-gate"><section className="agreement-dialog" role="dialog" aria-modal="true" aria-labelledby="agreement-title"><p className="eyebrow">Required before entry</p><h1 id="agreement-title">{PLAYTEST_AGREEMENT.title}</h1><p>{PLAYTEST_AGREEMENT.introduction}</p><ol>{PLAYTEST_AGREEMENT.terms.map((term) => <li key={term}>{term}</li>)}</ol><form action={acceptPlaytestAgreement}><label className="agreement-check"><input type="checkbox" name="agreementAccepted" value="yes" required /><span>I have read and agree to these playtest conditions.</span></label><button className="button primary">Agree and enter the Field</button></form>{user ? <form action={signOut}><button className="button secondary">Decline and sign out</button></form> : <form action={leaveEvent}><button className="button secondary">Decline and leave event</button></form>}<small>Agreement version {PLAYTEST_AGREEMENT.version}</small></section></main>;
+    return <main id="main" className="agreement-gate"><section className="agreement-dialog" role="dialog" aria-modal="true" aria-labelledby="agreement-title"><p className="eyebrow">Required before entry</p><h1 id="agreement-title">{PLAYTEST_AGREEMENT.title}</h1><p>{PUBLIC_TESTING_NOTICE}</p><p>{PLAYTEST_AGREEMENT.introduction}</p><ol>{PLAYTEST_AGREEMENT.terms.map((term) => <li key={term}>{term}</li>)}</ol><p className="agreement-links"><Link href="/testing-disclaimer">Testing Disclaimer</Link> · <Link href="/privacy">Privacy Policy</Link> · <Link href="/terms">Terms of Use</Link></p><form action={acceptPlaytestAgreement}><label className="agreement-check"><input type="checkbox" name="agreementAccepted" value="yes" required /><span>I have read and agree to these playtest conditions.</span></label><button className="button primary">Agree and enter the Field</button></form>{user ? <form action={signOut}><button className="button secondary">Decline and sign out</button></form> : <form action={leaveEvent}><button className="button secondary">Decline and leave event</button></form>}<small>Agreement version {PLAYTEST_AGREEMENT.version}</small></section></main>;
   }
 
   const displayName = profile?.display_name || guest?.display_name || user?.email || "Guest researcher";
@@ -49,6 +49,7 @@ export default async function ArenaPage() {
 
   return <main id="main" className="dashboard shell">
     <div className="dashboard-heading"><p className="eyebrow">PodBound Field</p><h1>Welcome, {displayName}</h1><p>{role.replace("_", " ")} · {accessModeLabel}</p></div>
+    <div className="testing-notice field-testing-notice"><strong>Temporary public test</strong><p>{PUBLIC_TESTING_NOTICE}</p><p><Link href="/testing-disclaimer">Testing Disclaimer</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link></p></div>
     <section className="dashboard-launch"><div><p className="eyebrow">Current controlled build</p><h2>{siteContent.testBuild}</h2><p>Play a verified ten-round game, add your observations, and submit the report directly to Podscape Labs.</p></div><Link className="button primary" href="/arena/play">Launch PodBound</Link></section>
     <div className="record-grid arena-records"><article className="record"><span>Field access</span><strong>{role === "admin" ? "Administrator" : role === "playtester" ? "Approved playtester" : "Event guest"}</strong></article><article className="record"><span>Agreement</span><strong>Current version accepted</strong></article><article className="record"><span>Reports submitted</span><strong>{reportCount || 0}</strong></article><article className="record"><span>Latest activity</span><strong>{reports[0] ? new Date(reports[0].submitted_at).toLocaleDateString("en-CA") : "No submitted games"}</strong></article></div>
     <section className="dashboard-history"><div className="dashboard-section-title"><div><p className="eyebrow">Your records</p><h2>Recent submitted games</h2></div><span>{reportCount || 0} total</span></div>{reports.length ? <div className="game-history-list">{reports.map((item) => <article key={item.id}><div><strong>{item.game_id}</strong><span>{new Date(item.submitted_at).toLocaleString("en-CA")}</span></div><div><b>{item.report.game?.scores?.join("–") || "Scores unavailable"}</b><span>{item.report.game?.valid === false ? "Integrity warning" : "Verified game"}</span></div><div><span>{item.report.feedback?.overallFeel || "No overall rating"}</span><span>{item.build_version}</span></div></article>)}</div> : <p className="dashboard-empty">Complete a game and submit its report to start your playtest history.</p>}</section>

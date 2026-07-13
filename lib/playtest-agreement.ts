@@ -1,5 +1,7 @@
 import { createAdminClient } from "./supabase/admin";
 
+export const PUBLIC_TESTING_NOTICE = "PodBound Field is a temporary public simulator test supporting development of the physical tabletop game. It is not the official PodBound launch, and access or stored test information may change or close during testing.";
+
 export const PLAYTEST_AGREEMENT = {
   version: "2026-07-11-v1",
   title: "PodBound Playtest Participation Agreement",
