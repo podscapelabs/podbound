@@ -33,7 +33,7 @@
 .auditHeader time { color:var(--muted);font-size:.68rem;text-transform:uppercase; }
 .audit p { margin:7px 0 0;color:var(--muted);font-size:.74rem; }
 .audit details { margin-top:10px; }
-.audit summary { cursor:pointer;font-size:.64rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase; }
+.audit summary { display:flex;min-height:44px;align-items:center;cursor:pointer;font-size:.64rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase; }
 .audit pre { max-height:360px;overflow:auto;padding:14px;border:1px solid var(--line);background:#171d18;color:#edf2e9;font-size:.66rem;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere; }
 
 @media (min-width:720px) {
