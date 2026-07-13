@@ -95,10 +95,6 @@ create trigger profile_progression_created
   after insert on public.profiles
   for each row execute procedure public.initialize_account_progression();
 
-insert into public.account_progression (account_id)
-select id from public.profiles
-on conflict (account_id) do nothing;
-
 create or replace function public.record_account_exp(
   target_account_id uuid,
   exp_delta integer,
@@ -181,3 +177,10 @@ comment on table public.account_exp_history is
   'Immutable server-issued account EXP ledger. Podlings never hold separate EXP.';
 comment on table public.account_reward_history is
   'Immutable server-issued reward and entitlement history for a shared platform account.';
+
+-- Keep the existing-account backfill last. The active-Podling foreign key is
+-- deferred, so inserting rows earlier would leave pending trigger events and
+-- prevent later ALTER TABLE statements (including enabling RLS) in this batch.
+insert into public.account_progression (account_id)
+select id from public.profiles
+on conflict (account_id) do nothing;
