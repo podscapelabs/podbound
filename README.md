@@ -28,6 +28,7 @@ The browser never receives the Supabase service-role key. Role changes, access-m
 | `/api/playtest-reports` | Server-authenticated internal playtest report intake |
 | `/admin` | Admin-only users, roles, access mode, events, and audit history |
 | `/admin/users` | Admin-only registered-user search, role filters, and access management |
+| `/admin/system` | Admin-only maintenance, Field access, configuration readiness, and activity records |
 | `/admin/reports` | Admin-only playtest report inbox, filters, feedback, and game audits |
 | `/admin/reports/[id]` | Admin-only complete submitted game-audit record |
 | `/privacy` | Privacy Policy |
