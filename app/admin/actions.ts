@@ -28,6 +28,7 @@ export async function changeRole(formData: FormData) {
   await audit(actor.id, "role_changed", targetId, { role: target.role }, { role });
   revalidatePath("/admin");
   revalidatePath("/admin/users");
+  revalidatePath("/admin/system");
 }
 
 export async function updateArenaMode(formData: FormData) {
@@ -39,7 +40,7 @@ export async function updateArenaMode(formData: FormData) {
   const next = { access_mode: mode, guest_access_enabled: false, updated_by: actor.id, updated_at: new Date().toISOString() };
   await admin.from("arena_settings").update(next).eq("id", 1);
   await audit(actor.id, "arena_mode_changed", null, previous, next);
-  revalidatePath("/admin"); revalidatePath("/arena");
+  revalidatePath("/admin"); revalidatePath("/admin/system"); revalidatePath("/arena");
 }
 
 export async function setMaintenanceMode(formData: FormData) {
@@ -52,6 +53,7 @@ export async function setMaintenanceMode(formData: FormData) {
   if (error) throw new Error("Maintenance mode could not be changed. Confirm migration 0005 has been applied.");
   await audit(actor.id, enabled ? "site_maintenance_enabled" : "site_maintenance_disabled", null, previous, next);
   revalidatePath("/admin");
+  revalidatePath("/admin/system");
   revalidatePath("/maintenance");
 }
 
