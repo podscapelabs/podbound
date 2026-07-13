@@ -20,4 +20,8 @@ assert.match(sql, /Podlings never hold separate EXP/, "shared account EXP rule m
 assert.match(sql, /revoke all on function public\.record_account_exp[\s\S]+from public, anon, authenticated/, "EXP writer must not be client callable");
 assert.doesNotMatch(sql, /grant (insert|update|delete)[\s\S]+to authenticated/i, "clients must not receive progression mutation grants");
 
+const backfillPosition = sql.lastIndexOf("insert into public.account_progression (account_id)");
+const progressionRlsPosition = sql.indexOf("alter table public.account_progression enable row level security");
+assert.ok(backfillPosition > progressionRlsPosition, "progression backfill must follow table alterations to avoid pending deferred-trigger events");
+
 console.log("My Lab schema checks passed.");
