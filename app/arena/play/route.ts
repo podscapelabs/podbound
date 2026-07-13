@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   const decision = await evaluateArenaAccess(profile);
 
   if (!decision.allowed) {
-    return new Response("PodBound Arena access is not available.", {
+    return new Response("PodBound Field access is not available.", {
       status: user ? 403 : 401,
       headers: { "Cache-Control": "private, no-store" },
     });

@@ -4,12 +4,12 @@ export const PLAYTEST_AGREEMENT = {
   version: "2026-07-11-v1",
   title: "PodBound Playtest Participation Agreement",
   introduction:
-    "PodBound is unfinished pre-release material shared only for controlled playtesting. Please review and accept these conditions before entering the Arena.",
+    "PodBound is unfinished pre-release material shared only for controlled playtesting. Please review and accept these conditions before entering the PodBound Field.",
   terms: [
     "I will not redistribute the simulator, its source, private links, game data, rules material, or unreleased assets.",
     "I will not publish screenshots, recordings, streams, or detailed playtest information without written permission from Podscape Labs.",
     "I understand that rules, balance, artwork, availability, and saved data may change or be removed during testing.",
-    "I will use the Arena respectfully and will not attempt to bypass access controls, impersonate another player, or interfere with other tests.",
+    "I will use the PodBound Field respectfully and will not attempt to bypass access controls, impersonate another player, or interfere with other tests.",
     "I consent to Podscape Labs storing my display name, shortened session identifier, game audit, and feedback for internal playtest analysis.",
   ],
 } as const;
