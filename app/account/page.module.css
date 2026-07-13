@@ -1,0 +1,42 @@
+.headingMeta { display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;color:var(--muted);font-size:.76rem; }
+.headingMeta span { display:inline-flex;align-items:center;gap:7px; }
+.statusDot { width:8px;height:8px;border-radius:50%;background:var(--forest); }
+.notice { margin:24px 0 0;padding:14px 16px;border-left:3px solid var(--forest);background:var(--cream); }
+.summaryGrid { display:grid;gap:16px;padding:34px 0; }
+.summaryCard { min-height:142px;padding:22px;border:1px solid var(--line);background:var(--cream); }
+.summaryCard span,.summaryCard strong,.summaryCard small { display:block; }
+.summaryCard span { margin-bottom:14px;color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase; }
+.summaryCard strong { font-family:Georgia,serif;font-size:clamp(1.25rem,3vw,1.65rem);font-weight:400;line-height:1.2; }
+.summaryCard small { margin-top:10px;color:var(--muted);font-size:.72rem; }
+.section { margin-bottom:34px;padding:clamp(24px,4vw,38px);border:1px solid var(--line);background:var(--cream); }
+.sectionHeader { display:flex;align-items:end;justify-content:space-between;gap:20px;padding-bottom:20px;border-bottom:1px solid var(--line); }
+.sectionHeader h2 { margin:0;font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,2.7rem);font-weight:400; }
+.sectionHeader p { margin:8px 0 0;color:var(--muted);font-size:.78rem; }
+.profileGrid { display:grid;gap:28px;padding-top:24px; }
+.profileForm { display:grid;gap:12px;align-content:start; }
+.profileForm label { display:grid;gap:7px;font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase; }
+.profileForm input { min-height:48px;width:100%;padding:10px 12px;border:1px solid var(--line);background:#fffdf7;color:var(--ink); }
+.profileForm small { color:var(--muted); }
+.identityRecord { display:grid;gap:14px;margin:0; }
+.identityRecord div { display:grid;gap:3px;padding-bottom:12px;border-bottom:1px solid var(--line); }
+.identityRecord dt { color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase; }
+.identityRecord dd { margin:0;overflow-wrap:anywhere;font-family:Georgia,serif;font-size:1.05rem; }
+.historyList { display:grid; }
+.historyItem { display:grid;gap:12px;padding:20px 0;border-bottom:1px solid var(--line); }
+.historyItem:last-child { border-bottom:0; }
+.historyItem div { display:flex;flex-direction:column;gap:3px; }
+.historyItem strong,.historyItem b { font-family:Georgia,serif;font-size:1.05rem;font-weight:400; }
+.historyItem span,.empty { color:var(--muted);font-size:.76rem; }
+.empty { margin:26px 0 0; }
+.securityGrid { display:grid;gap:16px;padding-top:24px; }
+.securityCard { padding:20px;border:1px solid var(--line); }
+.securityCard h3 { margin:0 0 8px;font-family:Georgia,serif;font-size:1.3rem;font-weight:400; }
+.securityCard p { margin:0 0 18px;color:var(--muted);font-size:.78rem; }
+.securityCard form { margin:0; }
+
+@media (min-width:760px) {
+  .summaryGrid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .profileGrid { grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr); }
+  .historyItem { grid-template-columns:1.25fr .75fr 1fr;align-items:center; }
+  .securityGrid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
