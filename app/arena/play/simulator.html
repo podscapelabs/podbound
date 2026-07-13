@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
-<title>PodBound Player Arena — V42.2 Ten-Round Playtest</title>
+<title>PodBound Field — V42.2 Ten-Round Playtest</title>
 <style>:root{
   --paper:#f3efe4;--paper-2:#fbf7ed;--forest:#193426;--forest-dark:#10130f;--ink:#20251f;--muted:#667066;
   --copper:#a65d35;--moss:#536858;--stone:#c9c1ac;--gold:#c49a48;--good:#4f7b58;--bad:#a34c3a;--warn:#b4842d;
@@ -379,7 +379,7 @@ main,#setupScreen,.setup-grid,.setup-card,.setup-forecast-panel{min-height:0;max
 <body>
 <div class="app-shell">
   <header class="app-header">
-    <div class="brand-row"><div class="brand-mark">PB</div><div><span class="eyebrow">Playable simulator</span><h1>PodBound Player Arena</h1><p>Play a verified ten-round game against the V42 bot and capture a clean playtest report.</p></div></div>
+    <div class="brand-row"><div class="brand-mark">PB</div><div><span class="eyebrow">Playable simulator</span><h1>PodBound Field</h1><p>Play a verified ten-round game against the V42 bot and capture a clean playtest report.</p></div></div>
     <div class="header-actions"><span id="healthBadge" class="health-badge">Checking engine…</span><button class="btn secondary" id="rulesToggle">Quick rules</button></div>
   </header>
   <div id="healthDetail" class="hint" style="margin:0 5px 12px"></div>
@@ -490,7 +490,7 @@ main,#setupScreen,.setup-grid,.setup-card,.setup-forecast-panel{min-height:0;max
       <article class="panel"><span class="eyebrow">Complete game audit</span><h2>Every round and action</h2><div id="finalAuditTable" class="table-wrap"></div><div id="replayResult"></div><div class="result-actions"><button class="btn primary" id="submitPlaytest">Submit report to Podscape Labs</button><button class="btn secondary" id="verifyReplay">Verify exact replay</button><button class="btn copper" id="playAgain">Rematch</button><button class="btn secondary" id="backSetup">New setup</button></div><div id="submitPlaytestStatus" aria-live="polite"></div></article>
     </section>
   </main>
-  <footer class="footer-note">PodBound Player Arena · V42.2 Ten-Round Playtest · desktop scroll + forecast grid · current V42 rules</footer>
+  <footer class="footer-note">PodBound Field · V42.2 Ten-Round Playtest · desktop scroll + forecast grid · current V42 rules</footer>
 </div>
 
 <div class="player-watermark" id="playerWatermark" aria-label="Playtest session watermark"></div>
@@ -1693,9 +1693,9 @@ function createPlayerGame(opts={}){
   const humanIndex=0,botIndex=1,seedInput=opts.seed||"PODBOUND-PLAYER-V42",baseSeed=normalizePlayerSeed(seedInput);
   const deckRng=rngFrom(hashString(`${baseSeed}|player-deck`)),initialDeck=opts.deck?[...opts.deck]:makeDeck(deckRng);
   const humanSpecies=opts.humanSpecies||"ducky",botSpecies=opts.botSpecies||"dairy";
-  if(!SPECIES[humanSpecies]||!SPECIES[botSpecies])throw new Error("Unknown Species in Player Arena setup.");
+  if(!SPECIES[humanSpecies]||!SPECIES[botSpecies])throw new Error("Unknown Species in PodBound Field setup.");
   const forecast=opts.forecast?.length===ROUND_COUNT?[...opts.forecast]:[...TRACKS[humanSpecies].cards];
-  if(forecast.some(k=>!ENV[k]))throw new Error("Player Arena Forecast contains an unknown Environment.");
+  if(forecast.some(k=>!ENV[k]))throw new Error("PodBound Field Forecast contains an unknown Environment.");
   let openingPriority;
   if(opts.openingPriority==="human")openingPriority=humanIndex;
   else if(opts.openingPriority==="bot")openingPriority=botIndex;
@@ -2338,7 +2338,7 @@ function bindPlaytestFeedback(){
 }
 function playtestReport(){
   return{
-    reportType:"PodBound Player Arena Playtest Report",
+    reportType:"PodBound Field Playtest Report",
     appVersion:"42.0-ten-round-playtest",
     balanceBaseline:"V42 ten-round provisional",
     rulesEngine:`${ENGINE_NAME} V${ENGINE_VERSION}`,
