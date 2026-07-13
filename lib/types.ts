@@ -48,6 +48,9 @@ export type PodboundEvent = {
 
 export type PlaytestReport = {
   id: string;
+  account_id: string | null;
+  guest_session_id: string | null;
+  event_id: string | null;
   player_label: string;
   game_id: string;
   build_version: string;
@@ -55,12 +58,27 @@ export type PlaytestReport = {
   report: {
     feedback?: {
       overallFeel?: string;
+      speciesMeaningful?: string;
+      forecastMeaningful?: string;
+      rulesClarity?: string;
       highlight?: string;
       confusion?: string;
+      generalNotes?: string;
+      roundFeedback?: Array<{ feel?: string; note?: string }>;
     };
     game?: {
       scores?: number[];
       valid?: boolean;
+      humanIndex?: number;
+      botIndex?: number;
+      players?: Array<{ species?: string; population?: number; stress?: number; stash?: unknown[] }>;
+      roundRecords?: unknown[];
+      suspiciousWarnings?: string[];
+      integrity?: { valid?: boolean; errors?: string[]; warnings?: string[] };
     };
+    appVersion?: string;
+    balanceBaseline?: string;
+    rulesEngine?: string;
+    createdAt?: string;
   };
 };
