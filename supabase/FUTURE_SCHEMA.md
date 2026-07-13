@@ -8,7 +8,7 @@ Migration `0006_my_lab_foundation.sql` now prepares the shared account progressi
 - `account_exp_history`: immutable, server-issued EXP ledger.
 - `account_reward_history`: immutable, server-issued reward ledger.
 
-The first public My Lab release remains intentionally unexposed until its progression rules and first approved Podling are ready. Commerce-owned records also remain deferred until a provider is selected:
+The first read-only My Lab release exposes these account-owned records with clear empty states. It does not calculate levels in the browser, issue EXP or rewards, or create Podlings. Those server-owned rules and the first approved Podling remain deferred. Commerce-owned records also remain deferred until a provider is selected:
 
 - orders and order history
 - saved addresses

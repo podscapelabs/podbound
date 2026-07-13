@@ -14,6 +14,7 @@ export async function Header() {
         <nav className="desktop-nav" aria-label="Primary navigation">
           <Link href="/#about">About</Link>
           <Link href="/arena">PodBound Field</Link>
+          {user && <Link href="/my-lab">My Lab</Link>}
           <Link href={accountLink}>{accountLabel}</Link>
           {!user && <Link className="nav-cta" href="/register">Register</Link>}
         </nav>
@@ -22,6 +23,7 @@ export async function Header() {
           <nav aria-label="Mobile primary navigation">
             <Link href="/#about">About</Link>
             <Link href="/arena">PodBound Field</Link>
+            {user && <Link href="/my-lab">My Lab</Link>}
             <Link href={accountLink}>{accountLabel}</Link>
             {!user && <Link className="nav-cta" href="/register">Register</Link>}
           </nav>
