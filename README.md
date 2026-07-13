@@ -22,10 +22,15 @@ The browser never receives the Supabase service-role key. Role changes, access-m
 | `/forgot-password` | Password recovery request |
 | `/reset-password` | Secure password update after recovery |
 | `/account` | Verified account and approval status |
+| `/account/delete` | Account and personal-data deletion request instructions |
 | `/arena` | Server-controlled PodBound Field entry and simulator launch |
 | `/arena/play` | Protected V42.2 ten-round simulator (never served as a public asset) |
 | `/api/playtest-reports` | Server-authenticated internal playtest report intake |
 | `/admin` | Admin-only users, roles, access mode, events, and audit history |
+| `/privacy` | Privacy Policy |
+| `/terms` | Terms of Use |
+| `/testing-disclaimer` | Temporary public-test notice |
+| `/contact` | Support, privacy, and deletion contact routes |
 
 ## Local installation
 
@@ -101,6 +106,17 @@ Run `supabase/migrations/0002_playtest_reports.sql` before enabling report submi
 ## Required playtest agreement
 
 Run `supabase/migrations/0003_playtest_agreements.sql` before deploying the agreement gate. Every account and temporary guest session must accept the current version in `lib/playtest-agreement.ts` before the Field dashboard, simulator route, or report endpoint will allow access. Acceptance is timestamped server-side; changing the agreement version requires acceptance again.
+
+## Legal and safety foundation
+
+The public footer links to the Privacy Policy, Terms of Use, Testing Disclaimer, contact page, and account deletion instructions. Registration and Field entry also display the short testing notice. Keep these pages aligned with actual data practices whenever registration fields, providers, analytics, report contents, retention, or account controls change.
+
+Internal review records:
+
+- `docs/ACCOUNT_DATA_SAFETY_REVIEW.md`
+- `docs/ASSET_AND_LICENSE_REGISTER.md`
+
+These records are implementation evidence, not a substitute for qualified legal advice. Before broader promotion, verify the published support inbox and obtain a legal review appropriate to Podscape Labs' users and operating locations.
 
 ## Row Level Security
 
