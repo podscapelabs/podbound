@@ -13,7 +13,7 @@ export default function Home() {
             <div className="logo-panel"><Image className="official-logo" src="/assets/logos/podbound-logo.png" alt="PodBound Field Archives" width={1800} height={791} priority /></div>
             <h1 className="sr-only">PodBound™</h1>
             <p className="hero-description">{siteContent.brand.description}</p>
-            <div className="actions"><Link className="button primary" href="/arena">Enter the Arena</Link><Link className="button secondary" href="#about">Learn about PodBound</Link></div>
+            <div className="actions"><Link className="button primary" href="/arena">Enter the Field</Link><Link className="button secondary" href="#about">Learn about PodBound</Link></div>
           </div>
         </div>
       </section>
@@ -24,7 +24,7 @@ export default function Home() {
       </section>
 
       <section className="playtest-section">
-        <div className="shell playtest-grid"><div><p className="eyebrow">Controlled access</p><h2>The PodBound Arena</h2></div><div><p>{siteContent.playtesting}</p><Link className="text-link" href="/arena">Check Arena access →</Link></div></div>
+        <div className="shell playtest-grid"><div><p className="eyebrow">Controlled access</p><h2>The PodBound Field</h2></div><div><p>{siteContent.playtesting}</p><Link className="text-link" href="/arena">Check Field access →</Link></div></div>
       </section>
 
       <section className="parent-link shell"><span>PB / PL</span><p>PodBound is the first major project from Podscape Labs.</p><a href={siteContent.parent.href}>{siteContent.parent.label} ↗</a></section>
