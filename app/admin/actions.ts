@@ -18,13 +18,16 @@ export async function changeRole(formData: FormData) {
   const admin = createAdminClient();
   const { data: target } = await admin.from("profiles").select("role").eq("id", targetId).single();
   if (!target) return;
+  if (target.role === role) return;
   if (target.role === "admin" && role !== "admin") {
     const { count } = await admin.from("profiles").select("id", { count: "exact", head: true }).eq("role", "admin");
     if ((count || 0) <= 1) throw new Error("The final administrator cannot be demoted.");
   }
-  await admin.from("profiles").update({ role, approved_at: role === "registered" ? null : new Date().toISOString(), approved_by: role === "registered" ? null : actor.id }).eq("id", targetId);
+  const { error } = await admin.from("profiles").update({ role, approved_at: role === "registered" ? null : new Date().toISOString(), approved_by: role === "registered" ? null : actor.id }).eq("id", targetId);
+  if (error) throw new Error("The account role could not be changed.");
   await audit(actor.id, "role_changed", targetId, { role: target.role }, { role });
   revalidatePath("/admin");
+  revalidatePath("/admin/users");
 }
 
 export async function updateArenaMode(formData: FormData) {
