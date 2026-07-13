@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   const { user, profile } = await getViewer();
   const decision = await evaluateArenaAccess(profile);
   if (!decision.allowed) {
-    return Response.json({ error: "Arena access is not available." }, { status: user ? 403 : 401 });
+    return Response.json({ error: "PodBound Field access is not available." }, { status: user ? 403 : 401 });
   }
 
   const guest = user ? null : await getGuestSession();
