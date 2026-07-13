@@ -39,7 +39,8 @@ No payment information, government identification, contact lists, precise regist
 
 ## Operational actions still required
 
-- [ ] Confirm that `support@podbound.net` is active, monitored, and able to receive support, privacy, and deletion requests.
+- [x] Route support, privacy, and deletion requests to the monitored temporary address `podscapelabs@gmail.com`.
+- [ ] Replace the temporary address with `support@podbound.net` after that inbox is active and monitored.
 - [ ] Assign a named privacy owner within Podscape Labs and document the internal request-handling process.
 - [ ] Set and document concrete retention periods for inactive accounts, agreement records, playtest reports, audit logs, and provider logs.
 - [ ] Define a deletion procedure that covers Supabase Auth, profile data, linked playtest records, and backups or documented exceptions.
