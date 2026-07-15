@@ -55,12 +55,14 @@ export default async function AdminSystemPage() {
   const authConfigured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY);
   const siteUrlConfigured = Boolean(process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL);
   const supportConfigured = Boolean(siteContent.supportEmail && siteContent.supportEmail.includes("@"));
+  const authEmailHourlyLimit = Number.parseInt(process.env.AUTH_EMAIL_HOURLY_LIMIT || "2", 10);
   const fieldMode = accessModes.find((mode) => mode.value === arena?.access_mode);
   const configChecks = [
     { label: "Authentication connection", detail: "Public and server-only Supabase configuration is present.", ready: authConfigured, manual: false },
     { label: "Canonical website URL", detail: "A production site URL is available for authentication callbacks.", ready: siteUrlConfigured, manual: false },
     { label: "Support contact", detail: `Requests currently route to ${siteContent.supportEmail}.`, ready: supportConfigured, manual: false },
-    { label: "Authentication email delivery", detail: "SMTP provider, quotas, templates, and recent delivery failures must be reviewed in the Supabase dashboard.", ready: false, manual: true },
+    { label: "Authentication email protection", detail: `Application cooldowns and a ${authEmailHourlyLimit}-request hourly sending budget are active. SMTP delivery still requires dashboard review.`, ready: true, manual: false },
+    { label: "Authentication email provider", detail: "Review custom SMTP, provider quotas, templates, and recent failures in Supabase. The last documented review found the built-in sender limited to 2 emails per hour.", ready: false, manual: true },
   ];
 
   return <main id="main" className="admin-page shell">
@@ -70,7 +72,7 @@ export default async function AdminSystemPage() {
       <article className={`${styles.status} ${site?.maintenance_enabled ? styles.danger : styles.good}`}><span>Public website</span><strong>{site?.maintenance_enabled ? "Maintenance" : "Live"}</strong></article>
       <article className={`${styles.status} ${arena?.access_mode === "closed" ? styles.review : styles.good}`}><span>Field access</span><strong>{fieldMode?.label || "Unknown"}</strong></article>
       <article className={`${styles.status} ${authConfigured ? styles.good : styles.danger}`}><span>Authentication</span><strong>{authConfigured ? "Configured" : "Attention needed"}</strong></article>
-      <article className={`${styles.status} ${styles.review}`}><span>Email delivery</span><strong>Manual review</strong></article>
+      <article className={`${styles.status} ${styles.review}`}><span>Email delivery</span><strong>{authEmailHourlyLimit}/hour app budget</strong></article>
     </section>
 
     <section className="admin-section"><h2>Website availability</h2><p><strong>{site?.maintenance_enabled ? "Maintenance mode is active." : "The public website is live."}</strong></p><p className={styles.sectionIntro}>{site?.maintenance_enabled ? "Normal pages and APIs are unavailable. Administrator and sign-in routes remain accessible so you can restore service." : "Use this emergency switch to replace the public site with a maintenance notice."}</p><ConfirmForm action={setMaintenanceMode} message={site?.maintenance_enabled ? "Take the PodBound website live again?" : "Enable maintenance mode and make the PodBound website inaccessible to normal visitors?"}><input type="hidden" name="enabled" value={site?.maintenance_enabled ? "false" : "true"} /><button className={`button ${site?.maintenance_enabled ? "primary" : "secondary"}`}>{site?.maintenance_enabled ? "Take website live" : "Enable maintenance mode"}</button></ConfirmForm></section>

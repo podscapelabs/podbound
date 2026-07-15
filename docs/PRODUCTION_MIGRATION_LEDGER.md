@@ -69,4 +69,4 @@ Maintenance mode is therefore confirmed to be enforced by the production request
 
 - establish a repeatable migration deployment process before adding shared-platform tables;
 - verify the production access-mode row and direct-route enforcement for PodBound Field;
-- review authentication email limits and resend behavior.
+- configure and verify a custom SMTP provider before wider registration; application cooldowns, resend behavior, and the current built-in sender limit are documented in `docs/AUTH_EMAIL_RELIABILITY.md`.
