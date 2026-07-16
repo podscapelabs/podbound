@@ -42,7 +42,7 @@ export default function PrivacyPage() {
     <p>PodBound uses essential authentication and session storage needed to sign users in, protect routes, and maintain temporary playtest sessions. Blocking essential storage may prevent account or Field features from working. We do not currently use behavioural advertising cookies.</p>
 
     <h2>Retention</h2>
-    <p>Account and profile information is retained while the account is active. Agreement records and playtest reports may be retained while they remain useful for security, recordkeeping, and game development. When information is no longer reasonably needed, we will delete or de-identify it, subject to legal, fraud-prevention, backup, and technical requirements.</p>
+    <p>Account and profile information is retained while the account is active. Agreement records and playtest reports may be retained while they remain useful for security, recordkeeping, and game development. When an account is deleted, retained playtest reports are disconnected from the account and their structured player identity fields are removed. Voluntary notes may require manual review. When information is no longer reasonably needed, we will delete or de-identify it, subject to legal, fraud-prevention, backup, and technical requirements.</p>
 
     <h2>Security</h2>
     <p>Passwords are handled by Supabase Auth and are not stored as plain text in the PodBound application database. We use server-side authorization checks, restricted administrator routes, row-level database security, private service credentials, and access logging appropriate to the current test. No online service can guarantee absolute security.</p>
