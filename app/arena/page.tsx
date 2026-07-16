@@ -8,6 +8,7 @@ import { hasAcceptedPlaytestAgreement, PLAYTEST_AGREEMENT, PUBLIC_TESTING_NOTICE
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PlaytestReport } from "@/lib/types";
 import { acceptPlaytestAgreement, enterAsGuest, leaveEvent } from "./actions";
+import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -47,12 +48,20 @@ export default async function ArenaPage() {
   const { data: rawReports, count: reportCount } = await reportsQuery;
   const reports = (rawReports || []) as PlaytestReport[];
 
-  return <main id="main" className="dashboard shell">
-    <div className="dashboard-heading"><p className="eyebrow">PodBound Field</p><h1>Welcome, {displayName}</h1><p>{role.replace("_", " ")} · {accessModeLabel}</p></div>
-    <div className="testing-notice field-testing-notice"><strong>Temporary public test</strong><p>{PUBLIC_TESTING_NOTICE}</p><p><Link href="/testing-disclaimer">Testing Disclaimer</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link></p></div>
-    <section className="dashboard-launch"><div><p className="eyebrow">Current controlled build</p><h2>{siteContent.testBuild}</h2><p>Play a verified ten-round game, add your observations, and submit the report directly to Podscape Labs.</p></div><Link className="button primary" href="/arena/play">Launch PodBound</Link></section>
-    <div className="record-grid arena-records"><article className="record"><span>Field access</span><strong>{role === "admin" ? "Administrator" : role === "playtester" ? "Approved playtester" : "Event guest"}</strong></article><article className="record"><span>Agreement</span><strong>Current version accepted</strong></article><article className="record"><span>Reports submitted</span><strong>{reportCount || 0}</strong></article><article className="record"><span>Latest activity</span><strong>{reports[0] ? new Date(reports[0].submitted_at).toLocaleDateString("en-CA") : "No submitted games"}</strong></article></div>
-    <section className="dashboard-history"><div className="dashboard-section-title"><div><p className="eyebrow">Your records</p><h2>Recent submitted games</h2></div><span>{reportCount || 0} total</span></div>{reports.length ? <div className="game-history-list">{reports.map((item) => <article key={item.id}><div><strong>{item.game_id}</strong><span>{new Date(item.submitted_at).toLocaleString("en-CA")}</span></div><div><b>{item.report.game?.scores?.join("–") || "Scores unavailable"}</b><span>{item.report.game?.valid === false ? "Integrity warning" : "Verified game"}</span></div><div><span>{item.report.feedback?.overallFeel || "No overall rating"}</span><span>{item.build_version}</span></div></article>)}</div> : <p className="dashboard-empty">Complete a game and submit its report to start your playtest history.</p>}</section>
-    <div className="actions">{user ? <form action={signOut}><button className="button secondary">Sign out</button></form> : <form action={leaveEvent}><button className="button secondary">Leave event</button></form>}</div>
+  return <main id="main" className={`dashboard shell ${styles.arena}`}>
+    <div className={styles.heading}><div><p className="eyebrow">PodBound Arena</p><h1>Welcome, {displayName}</h1><p>{role.replace("_", " ")} · {accessModeLabel}</p></div>{user && <Link className="button secondary" href="/account">Return to My Lab</Link>}</div>
+
+    <section className={styles.launch} aria-labelledby="current-build-title">
+      <div className={styles.launchCopy}><div className={styles.buildLabel}><span>Current controlled build</span><strong>Field access active</strong></div><h2 id="current-build-title">{siteContent.testBuild}</h2><p>Play a ten-round game, add your observations, and submit the report directly to Podscape Labs.</p><div className={styles.launchActions}><Link className="button primary" href="/arena/play">Enter the Arena</Link><Link href="/testing-disclaimer">Review testing notice</Link></div></div>
+      <div className={styles.launchRecord} aria-label="Current access record"><span>Access holder</span><strong>{displayName}</strong><dl><div><dt>Role</dt><dd>{role === "admin" ? "Administrator" : role === "playtester" ? "Playtester" : "Event guest"}</dd></div><div><dt>Agreement</dt><dd>Accepted</dd></div><div><dt>Reports</dt><dd>{reportCount || 0}</dd></div></dl></div>
+    </section>
+
+    <aside className={styles.testingNotice}><div><strong>Temporary public simulator test</strong><p>{PUBLIC_TESTING_NOTICE}</p></div><p><Link href="/testing-disclaimer">Testing Disclaimer</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></p></aside>
+
+    <section className={styles.statusStrip} aria-label="Arena account status"><article><span>Field access</span><strong>{role === "admin" ? "Administrator" : role === "playtester" ? "Approved playtester" : "Event guest"}</strong></article><article><span>Agreement</span><strong>Current version accepted</strong></article><article><span>Reports submitted</span><strong>{reportCount || 0}</strong></article><article><span>Latest activity</span><strong>{reports[0] ? new Date(reports[0].submitted_at).toLocaleDateString("en-CA") : "No submitted games"}</strong></article></section>
+
+    <section className={styles.history}><div className={styles.sectionTitle}><div><p className="eyebrow">Your Field records</p><h2>Recent submitted games</h2></div><span>{reportCount || 0} total</span></div>{reports.length ? <div className={styles.historyList}>{reports.map((item) => <article key={item.id}><div><strong>{item.game_id}</strong><span>{new Date(item.submitted_at).toLocaleString("en-CA")}</span></div><div><b>{item.report.game?.scores?.join("–") || "Scores unavailable"}</b><span className={item.report.game?.valid === false ? styles.warning : styles.passed}>{item.report.game?.valid === false ? "Integrity warning" : "Integrity passed"}</span></div><div><span>{item.report.feedback?.overallFeel || "No overall rating"}</span><span>{item.build_version}</span></div></article>)}</div> : <p className={styles.empty}>Complete a game and submit its report to start your playtest history.</p>}</section>
+
+    <div className={styles.sessionAction}>{user ? <form action={signOut}><button className="button secondary">Sign out</button></form> : <form action={leaveEvent}><button className="button secondary">Leave event</button></form>}</div>
   </main>;
 }
