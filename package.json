@@ -13,7 +13,8 @@
     "test:my-lab": "node --experimental-strip-types scripts/check-my-lab-schema.ts",
     "test:auth-email": "node --experimental-strip-types scripts/check-auth-email-policy.ts",
     "test:redirects": "node --experimental-strip-types scripts/check-safe-redirects.ts",
-    "test:public-data": "node --experimental-strip-types scripts/check-public-data-policy.ts"
+    "test:public-data": "node --experimental-strip-types scripts/check-public-data-policy.ts",
+    "test:account-deletion": "node --experimental-strip-types scripts/check-account-deletion-policy.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
