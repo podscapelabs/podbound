@@ -1,6 +1,10 @@
 .headingMeta { display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;color:var(--muted);font-size:.76rem; }
 .headingMeta span { display:inline-flex;align-items:center;gap:7px; }
 .statusDot { width:8px;height:8px;border-radius:50%;background:var(--forest); }
+.accountNav { position:sticky;z-index:5;top:0;display:flex;gap:8px;overflow-x:auto;margin-top:24px;padding:10px;border:1px solid var(--line);background:rgba(250,246,236,.96);backdrop-filter:blur(10px); }
+.accountNav a { flex:0 0 auto;padding:9px 12px;color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-decoration:none;text-transform:uppercase; }
+.accountNav a:hover,.accountNav a:focus-visible { background:var(--forest);color:var(--cream); }
+.anchorTarget { scroll-margin-top:84px; }
 .notice { margin:24px 0 0;padding:14px 16px;border-left:3px solid var(--forest);background:var(--cream); }
 .summaryGrid { display:grid;gap:16px;padding:34px 0; }
 .summaryCard { min-height:142px;padding:22px;border:1px solid var(--line);background:var(--cream); }
@@ -33,12 +37,17 @@
 .securityCard h3 { margin:0 0 8px;font-family:Georgia,serif;font-size:1.3rem;font-weight:400; }
 .securityCard p { margin:0 0 18px;color:var(--muted);font-size:.78rem; }
 .securityCard form { margin:0; }
+.labPending { display:grid;gap:22px;align-items:center;margin-bottom:34px;padding:clamp(24px,4vw,38px);border:1px solid var(--line);background:var(--cream); }
+.labPending>span { color:var(--muted);font-size:.66rem;font-weight:700;letter-spacing:.1em; }
+.labPending h2 { margin:0;font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,2.7rem);font-weight:400; }
+.labPending p:last-child { margin:8px 0 0;color:var(--muted);font-size:.78rem; }
 
 @media (min-width:760px) {
   .summaryGrid { grid-template-columns:repeat(4,minmax(0,1fr)); }
   .profileGrid { grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr); }
   .historyItem { grid-template-columns:1.25fr .75fr 1fr;align-items:center; }
   .securityGrid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .labPending { grid-template-columns:auto 1fr; }
 }
 
 @media (max-width:759px) {
