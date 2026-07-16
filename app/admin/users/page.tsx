@@ -57,12 +57,14 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
     <div className="dashboard-heading"><div className={styles.headingRow}><div><p className="eyebrow">Restricted record</p><h1>Users & playtesters</h1></div><p>Review registered accounts and control who receives PodBound Field playtester or administrator access.</p></div><AdminNav active="users" /></div>
 
     <section className={styles.stats} aria-label="Account totals">
-      <article className={styles.stat}><span>All accounts</span><strong>{totalResult.count || 0}</strong></article>
-      <article className={styles.stat}><span>Registered</span><strong>{registeredResult.count || 0}</strong></article>
-      <article className={styles.stat}><span>Playtesters</span><strong>{playtesterResult.count || 0}</strong></article>
-      <article className={styles.stat}><span>Administrators</span><strong>{adminResult.count || 0}</strong></article>
+      <Link className={`${styles.stat} ${role === "all" ? styles.activeStat : ""}`} href="/admin/users"><span>All accounts</span><strong>{totalResult.count || 0}</strong><small>Complete registry</small></Link>
+      <Link className={`${styles.stat} ${role === "registered" ? styles.activeStat : ""}`} href="/admin/users?role=registered"><span>Registered</span><strong>{registeredResult.count || 0}</strong><small>Standard accounts</small></Link>
+      <Link className={`${styles.stat} ${role === "playtester" ? styles.activeStat : ""}`} href="/admin/users?role=playtester"><span>Playtesters</span><strong>{playtesterResult.count || 0}</strong><small>Arena-approved accounts</small></Link>
+      <Link className={`${styles.stat} ${role === "admin" ? styles.activeStat : ""}`} href="/admin/users?role=admin"><span>Administrators</span><strong>{adminResult.count || 0}</strong><small>Restricted access</small></Link>
     </section>
 
+    <section className={styles.registry} aria-labelledby="account-registry-title">
+    <div className={styles.registryHeading}><div><p className="eyebrow">Account registry</p><h2 id="account-registry-title">Find an account</h2></div><p>Search by display name or email, then open a record to review details or change its access role.</p></div>
     <form className={styles.filters}>
       <label>Search<input type="search" name="q" defaultValue={q} placeholder="Display name or email" /></label>
       <label>Account role<select name="role" defaultValue={role}><option value="all">All roles</option><option value="registered">Registered</option><option value="playtester">Playtester</option><option value="admin">Administrator</option></select></label>
@@ -70,12 +72,13 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
     </form>
 
     <div className={styles.resultsMeta}><span>{count || 0} matching accounts</span><span>Newest first · {PAGE_SIZE} per page</span></div>
-    {users.length ? <section className={styles.userList} aria-label="Registered users">{users.map((user) => <article className={styles.user} key={user.id}>
-      <div className={styles.identity}><strong>{user.display_name || "Unnamed account"}</strong><span>{user.email}</span><span className={`${styles.roleBadge} ${styles[user.role]}`}>{roleLabel(user.role)}</span></div>
-      <div className={styles.metadata}><div><span>Created</span><strong>{date(user.created_at)}</strong></div><div><span>Access granted</span><strong>{date(user.approved_at)}</strong></div><div><span>Updated</span><strong>{date(user.updated_at)}</strong></div><div><span>Account ref</span><strong>{user.id.slice(0, 8).toUpperCase()}</strong></div></div>
-      <ConfirmForm action={changeRole} message={`Change ${user.email} from ${roleLabel(user.role)} to the selected role?`}><div className={styles.roleForm}><input type="hidden" name="targetId" value={user.id} /><label>Change role<select name="role" defaultValue={user.role}><option value="registered">Registered</option><option value="playtester">Playtester</option><option value="admin">Administrator</option></select></label><button className="button secondary">Save role</button></div></ConfirmForm>
-    </article>)}</section> : <div className={styles.empty}><h2>No matching accounts</h2><p>Try clearing the filters or searching a different name or email.</p></div>}
+    {users.length ? <div className={styles.userList} aria-label="Registered users">{users.map((user) => <details className={styles.user} key={user.id}>
+      <summary><div className={styles.identity}><strong>{user.display_name || "Unnamed account"}</strong><span>{user.email}</span></div><span className={`${styles.roleBadge} ${styles[user.role]}`}>{roleLabel(user.role)}</span><div className={styles.summaryFact}><span>Created</span><strong>{date(user.created_at)}</strong></div><div className={styles.summaryFact}><span>Account ref</span><strong>{user.id.slice(0, 8).toUpperCase()}</strong></div><span className={styles.disclosure} aria-hidden="true">+</span></summary>
+      <div className={styles.userDetails}><div className={styles.metadata}><div><span>Created</span><strong>{date(user.created_at)}</strong></div><div><span>Access granted</span><strong>{date(user.approved_at)}</strong></div><div><span>Updated</span><strong>{date(user.updated_at)}</strong></div><div><span>Account reference</span><strong>{user.id.slice(0, 8).toUpperCase()}</strong></div></div>
+      <div className={styles.roleControl}><div><span>Access control</span><p>Role changes take effect immediately and are recorded in administrator activity.</p></div><ConfirmForm action={changeRole} message={`Change ${user.email} from ${roleLabel(user.role)} to the selected role?`}><div className={styles.roleForm}><input type="hidden" name="targetId" value={user.id} /><label>Change role<select name="role" defaultValue={user.role}><option value="registered">Registered</option><option value="playtester">Playtester</option><option value="admin">Administrator</option></select></label><button className="button secondary">Save role</button></div></ConfirmForm></div></div>
+    </details>)}</div> : <div className={styles.empty}><h2>No matching accounts</h2><p>Try clearing the filters or searching a different name or email.</p></div>}
 
     {totalPages > 1 && <nav className={styles.pagination} aria-label="User pages">{currentPage > 1 ? <Link className="button secondary" href={pageHref(filterState, currentPage - 1)}>Previous</Link> : null}<span>Page {currentPage} of {totalPages}</span>{currentPage < totalPages ? <Link className="button secondary" href={pageHref(filterState, currentPage + 1)}>Next</Link> : null}</nav>}
+    </section>
   </main>;
 }
