@@ -65,11 +65,13 @@ export default async function AdminReportsPage({ searchParams }: { searchParams:
     <div className="dashboard-heading"><div className={styles.headingRow}><div><p className="eyebrow">Restricted record</p><h1>Playtest reports</h1></div><p>Review submitted Field games, player feedback, integrity warnings, and complete internal audits.</p></div><AdminNav active="reports" /></div>
 
     <section className={styles.stats} aria-label="Report totals">
-      <article className={styles.stat}><span>All reports</span><strong>{totalResult.count || 0}</strong></article>
-      <article className={styles.stat}><span>Integrity passed</span><strong>{validResult.count || 0}</strong></article>
-      <article className={styles.stat}><span>Integrity warnings</span><strong>{warningResult.count || 0}</strong></article>
+      <Link className={`${styles.stat} ${integrity === "all" ? styles.activeStat : ""}`} href="/admin/reports"><span>All reports</span><strong>{totalResult.count || 0}</strong><small>Complete Field archive</small></Link>
+      <Link className={`${styles.stat} ${integrity === "valid" ? styles.activeStat : ""}`} href="/admin/reports?integrity=valid"><span>Integrity passed</span><strong>{validResult.count || 0}</strong><small>Validated game records</small></Link>
+      <Link className={`${styles.stat} ${integrity === "warning" ? styles.warningStat : ""}`} href="/admin/reports?integrity=warning"><span>Integrity warnings</span><strong>{warningResult.count || 0}</strong><small>Records requiring review</small></Link>
     </section>
 
+    <section className={styles.inbox} aria-labelledby="report-inbox-title">
+    <div className={styles.inboxHeading}><div><p className="eyebrow">Field archive</p><h2 id="report-inbox-title">Report inbox</h2></div><p>Search submitted games, isolate integrity warnings, and open any record for its complete internal audit.</p></div>
     <form className={styles.filters}>
       <label>Search<input type="search" name="q" defaultValue={q} placeholder="Player, game ID, or build" /></label>
       <label>Integrity<select name="integrity" defaultValue={integrity}><option value="all">All reports</option><option value="valid">Passed</option><option value="warning">Warnings</option></select></label>
@@ -79,7 +81,7 @@ export default async function AdminReportsPage({ searchParams }: { searchParams:
     </form>
 
     <div className={styles.resultsMeta}><span>{count || 0} matching reports</span><span>Newest first · {PAGE_SIZE} per page</span></div>
-    {reports.length ? <section className={styles.reportList} aria-label="Submitted playtest reports">{reports.map((item) => {
+    {reports.length ? <div className={styles.reportList} aria-label="Submitted playtest reports">{reports.map((item) => {
       const game = item.report.game;
       const feedback = item.report.feedback;
       const integrityErrors = game?.integrity?.errors || [];
@@ -89,7 +91,7 @@ export default async function AdminReportsPage({ searchParams }: { searchParams:
       const players = game?.players || [];
       const valid = game?.valid !== false;
       return <details className={styles.report} key={item.id}>
-        <summary><div className={styles.primary}><strong>{item.player_label} · {item.game_id}</strong><span><time dateTime={item.submitted_at}>{new Date(item.submitted_at).toLocaleString("en-CA")}</time> · {item.build_version}</span></div><div className={styles.facts}><span className={`${styles.pill} ${valid ? styles.valid : styles.warning}`}>{valid ? "Integrity passed" : "Integrity warning"}</span><span className={styles.pill}>Scores {game?.scores?.join("–") || "—"}</span><span className={styles.pill}>{feedback?.overallFeel || "No rating"}</span></div></summary>
+        <summary><div className={styles.primary}><strong>{item.player_label}</strong><span>{item.game_id}</span></div><div className={styles.summaryFact}><span>Submitted</span><strong><time dateTime={item.submitted_at}>{new Date(item.submitted_at).toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" })}</time></strong><small>{item.build_version}</small></div><div className={styles.summaryFact}><span>Final score</span><strong>{game?.scores?.join("–") || "—"}</strong><small>{feedback?.overallFeel || "No rating"}</small></div><span className={`${styles.pill} ${valid ? styles.valid : styles.warning}`}>{valid ? "Passed" : "Review"}</span><span className={styles.disclosure} aria-hidden="true">+</span></summary>
         <div className={styles.details}>
           <div className={styles.summaryGrid}>
             <div><span>Player species</span><strong>{text(players[humanIndex]?.species)}</strong></div>
@@ -112,8 +114,9 @@ export default async function AdminReportsPage({ searchParams }: { searchParams:
           <p className={styles.auditLink}><Link className="button secondary" href={`/admin/reports/${item.id}`}>Open complete game audit</Link></p>
         </div>
       </details>;
-    })}</section> : <div className={styles.empty}><h2>No matching reports</h2><p>Try clearing the filters or wait for the next Field submission.</p></div>}
+    })}</div> : <div className={styles.empty}><h2>No matching reports</h2><p>Try clearing the filters or wait for the next Field submission.</p></div>}
 
     {totalPages > 1 && <nav className={styles.pagination} aria-label="Report pages">{currentPage > 1 ? <Link className="button secondary" href={pageHref(filterState, currentPage - 1)}>Previous</Link> : null}<span>Page {currentPage} of {totalPages}</span>{currentPage < totalPages ? <Link className="button secondary" href={pageHref(filterState, currentPage + 1)}>Next</Link> : null}</nav>}
+    </section>
   </main>;
 }
