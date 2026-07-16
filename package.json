@@ -15,7 +15,8 @@
     "test:redirects": "node --experimental-strip-types scripts/check-safe-redirects.ts",
     "test:public-data": "node --experimental-strip-types scripts/check-public-data-policy.ts",
     "test:account-deletion": "node --experimental-strip-types scripts/check-account-deletion-policy.ts",
-    "test:accessibility": "node --experimental-strip-types scripts/check-accessibility-contracts.ts"
+    "test:accessibility": "node --experimental-strip-types scripts/check-accessibility-contracts.ts",
+    "test:playtest-reports": "node --experimental-strip-types scripts/check-playtest-report-policy.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

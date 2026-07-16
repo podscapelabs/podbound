@@ -2,6 +2,10 @@ import { NextRequest } from "next/server";
 import { evaluateArenaAccess } from "@/lib/access";
 import { getViewer } from "@/lib/auth";
 import { getGuestSession } from "@/lib/guest";
+import {
+  checkPlaytestReportSubmissionLimit,
+  findExistingPlaytestReport,
+} from "@/lib/playtest-report-guard";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasAcceptedPlaytestAgreement } from "@/lib/playtest-agreement";
 
@@ -38,6 +42,32 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "The current playtest agreement must be accepted." }, { status: 403 });
   }
 
+  const actor = {
+    accountId: user?.id || null,
+    guestSessionId: guest?.id || null,
+  };
+  try {
+    const submissionLimit = await checkPlaytestReportSubmissionLimit(actor);
+    if (!submissionLimit.allowed) {
+      return Response.json(
+        { error: "Too many reports were submitted. Try again shortly." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(submissionLimit.retryAfterSeconds),
+            "Cache-Control": "no-store",
+          },
+        },
+      );
+    }
+  } catch (error) {
+    console.error("Playtest report submission guard failed", error instanceof Error ? error.message : "unknown");
+    return Response.json(
+      { error: "Report submission is temporarily unavailable." },
+      { status: 503, headers: { "Retry-After": "60", "Cache-Control": "no-store" } },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -56,6 +86,24 @@ export async function POST(request: NextRequest) {
   const gameId = typeof game?.gameId === "string" ? game.gameId.slice(0, 120) : "unknown-game";
   const appVersion = typeof report.appVersion === "string" ? report.appVersion.slice(0, 80) : "unknown";
   const playerLabel = (profile?.display_name || guest?.display_name || "Playtester").slice(0, 40);
+
+  try {
+    const existingReport = await findExistingPlaytestReport(actor, gameId);
+    if (existingReport) {
+      return Response.json({
+        ok: true,
+        id: existingReport.id,
+        submittedAt: existingReport.submitted_at,
+        duplicate: true,
+      });
+    }
+  } catch (error) {
+    console.error("Playtest report duplicate guard failed", error instanceof Error ? error.message : "unknown");
+    return Response.json(
+      { error: "Report submission is temporarily unavailable." },
+      { status: 503, headers: { "Retry-After": "60", "Cache-Control": "no-store" } },
+    );
+  }
 
   const admin = createAdminClient();
   const { data, error } = await admin.from("playtest_reports").insert({
