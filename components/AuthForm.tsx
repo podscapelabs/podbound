@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { safeInternalPath } from "@/lib/safe-redirect";
 
 type Mode = "sign-in" | "register" | "forgot" | "reset";
 
@@ -44,7 +45,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       if (mode === "sign-in") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        router.push(params.get("returnTo") || "/arena"); router.refresh(); return;
+        router.push(safeInternalPath(params.get("returnTo"), "/arena")); router.refresh(); return;
       }
       if (mode === "register") {
         const result = await requestEmail({ action: "register", email, password, displayName });
