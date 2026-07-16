@@ -5,7 +5,7 @@ import { getViewer } from "@/lib/auth";
 export async function Header() {
   const { user } = await getViewer();
   const accountLink = user ? "/account" : "/sign-in";
-  const accountLabel = user ? "Account" : "Sign in";
+  const accountLabel = user ? "My Lab" : "Sign in";
 
   return (
     <header className="site-header">
@@ -14,7 +14,6 @@ export async function Header() {
         <nav className="desktop-nav" aria-label="Primary navigation">
           <Link href="/#about">About</Link>
           <Link href="/arena">PodBound Field</Link>
-          {user && <Link href="/my-lab">My Lab</Link>}
           <Link href={accountLink}>{accountLabel}</Link>
           {!user && <Link className="nav-cta" href="/register">Register</Link>}
         </nav>
@@ -23,7 +22,6 @@ export async function Header() {
           <nav aria-label="Mobile primary navigation">
             <Link href="/#about">About</Link>
             <Link href="/arena">PodBound Field</Link>
-            {user && <Link href="/my-lab">My Lab</Link>}
             <Link href={accountLink}>{accountLabel}</Link>
             {!user && <Link className="nav-cta" href="/register">Register</Link>}
           </nav>
