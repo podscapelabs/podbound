@@ -16,7 +16,7 @@ This record describes the current PodBound implementation. It must be updated wh
 | Database access | Row Level Security protects application tables; privileged operations use reviewed server code. | `supabase/migrations`, `docs/PRODUCTION_MIGRATION_LEDGER.md` |
 | User controls | Signed-in users can change display name, request a password reset, sign out, and find deletion-request instructions. | `app/account/page.tsx`, `app/account/delete/page.tsx` |
 | Agreement record | The current playtest agreement version and acceptance time are recorded server-side before Field entry. | `lib/playtest-agreement.ts`, migration `0003` |
-| Playtest data | Reports are accepted by an authenticated server route; player-facing JSON copy/download controls are not exposed. | `app/api/playtest-reports`, simulator integration |
+| Playtest data | Reports are accepted by an authenticated server route; player-facing JSON copy/download controls are not exposed. Submissions are size-limited, rate-limited using a hashed player reference, and duplicate game reports return the original receipt instead of creating another record. | `app/api/playtest-reports`, `lib/playtest-report-guard.ts`, simulator integration |
 | Watermarking | Field sessions display a player display name and shortened account/session reference rather than email or full internal identifier. | Field simulator integration |
 | Auditability | Administrative role and access changes are recorded in the admin audit log. | admin actions and `admin_audit_log` migration |
 
