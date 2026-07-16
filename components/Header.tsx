@@ -18,7 +18,7 @@ export async function Header() {
           {!user && <Link className="nav-cta" href="/register">Register</Link>}
         </nav>
         <details className="mobile-menu">
-          <summary aria-label="Open primary navigation">Menu</summary>
+          <summary aria-label="Primary navigation menu">Menu</summary>
           <nav aria-label="Mobile primary navigation">
             <Link href="/#about">About</Link>
             <Link href="/arena">PodBound Field</Link>

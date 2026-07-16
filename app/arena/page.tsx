@@ -7,7 +7,8 @@ import { signOut } from "@/app/account/actions";
 import { hasAcceptedPlaytestAgreement, PLAYTEST_AGREEMENT, PUBLIC_TESTING_NOTICE } from "@/lib/playtest-agreement";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PlaytestReport } from "@/lib/types";
-import { acceptPlaytestAgreement, enterAsGuest, leaveEvent } from "./actions";
+import { PlaytestAgreementGate } from "@/components/PlaytestAgreementGate";
+import { enterAsGuest, leaveEvent } from "./actions";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,7 @@ export default async function ArenaPage() {
 
   const agreementAccepted = await hasAcceptedPlaytestAgreement(user?.id || null, guest?.id || null);
   if (!agreementAccepted) {
-    return <main id="main" className={styles.agreementGate}><section className={styles.agreementDialog} role="dialog" aria-modal="true" aria-labelledby="agreement-title"><header><div><p className="eyebrow">Required before entry</p><h1 id="agreement-title">{PLAYTEST_AGREEMENT.title}</h1></div><span>Version {PLAYTEST_AGREEMENT.version}</span></header><div className={styles.agreementNotice}><strong>Temporary public simulator test</strong><p>{PUBLIC_TESTING_NOTICE}</p></div><p className={styles.agreementIntro}>{PLAYTEST_AGREEMENT.introduction}</p><ol className={styles.agreementTerms}>{PLAYTEST_AGREEMENT.terms.map((term) => <li key={term}>{term}</li>)}</ol><nav className={styles.agreementLinks} aria-label="Agreement documents"><Link href="/testing-disclaimer">Testing Disclaimer</Link><Link href="/privacy">Privacy Policy</Link><Link href="/terms">Terms of Use</Link></nav><div className={styles.agreementActions}><form action={acceptPlaytestAgreement}><label className={styles.agreementCheck}><input type="checkbox" name="agreementAccepted" value="yes" required /><span>I have read and agree to these playtest conditions.</span></label><button className="button primary">Agree and enter the Arena</button></form>{user ? <form action={signOut}><button className="button secondary">Decline and sign out</button></form> : <form action={leaveEvent}><button className="button secondary">Decline and leave event</button></form>}</div></section></main>;
+    return <PlaytestAgreementGate agreement={PLAYTEST_AGREEMENT} notice={PUBLIC_TESTING_NOTICE} signedIn={Boolean(user)} />;
   }
 
   const displayName = profile?.display_name || guest?.display_name || user?.email || "Guest researcher";
