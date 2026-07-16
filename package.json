@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,7 +18,8 @@
     "test:account-deletion": "node --experimental-strip-types scripts/check-account-deletion-policy.ts",
     "test:accessibility": "node --experimental-strip-types scripts/check-accessibility-contracts.ts",
     "test:playtest-reports": "node --experimental-strip-types scripts/check-playtest-report-policy.ts",
-    "test:security-headers": "node --experimental-strip-types scripts/check-security-headers.ts"
+    "test:security-headers": "node --experimental-strip-types scripts/check-security-headers.ts",
+    "test": "pnpm run test:access && pnpm run test:my-lab && pnpm run test:auth-email && pnpm run test:redirects && pnpm run test:public-data && pnpm run test:account-deletion && pnpm run test:accessibility && pnpm run test:playtest-reports && pnpm run test:security-headers"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
