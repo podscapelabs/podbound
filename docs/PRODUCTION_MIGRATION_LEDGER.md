@@ -4,7 +4,7 @@ This ledger records database objects verified in the production Supabase project
 
 Production project reference: `lqjhiiqezoehwjrlhulf`
 
-Last verified: 2026-07-13
+Last verified: 2026-07-16
 
 ## Current state
 
@@ -14,12 +14,34 @@ The following committed migrations were verified against live production objects
 
 | Migration | Production state | Verification |
 | --- | --- | --- |
-| `0001_foundation.sql` | Applied | `profiles`, `arena_settings`, and `admin_audit_log` exist |
-| `0002_playtest_reports.sql` | Applied | `playtest_reports` exists |
-| `0003_playtest_agreements.sql` | Applied | `playtest_agreement_acceptances` exists |
-| `0005_maintenance_mode.sql` | Applied | `site_settings` exists with one row; row-level security and anonymous read policy are enabled |
+| `0001_foundation.sql` | Applied | Foundation tables, functions, triggers, policies, and row-level security are present |
+| `0002_playtest_reports.sql` | Applied | `playtest_reports` exists with row-level security |
+| `0003_playtest_agreements.sql` | Applied | `playtest_agreement_acceptances` exists with row-level security |
+| `0005_maintenance_mode.sql` | Applied | `site_settings` exists with its singleton row and public maintenance policy |
+| `0006_my_lab_foundation.sql` | Applied | My Lab tables, policies, functions, triggers, and existing-account progression backfill are present |
+| `0007_restrict_public_site_settings.sql` | Applied | Public roles can select only `id` and `maintenance_enabled` |
+| `0008_deidentify_deleted_accounts.sql` | Applied | Deleted-account report constraint, de-identification function, and profile-deletion trigger are present |
 
 There is no committed `0004` migration in the production repository. The numbering gap must not be filled by renaming an existing migration.
+
+## Full read-only schema reconciliation
+
+Verified on 2026-07-16 against the live production project:
+
+- all 14 expected application tables are present;
+- row-level security is enabled on all 14 expected tables;
+- all 7 expected client-readable policies are present;
+- all 6 expected application functions are present;
+- all 8 expected application triggers are enabled;
+- anonymous and authenticated users can select only `id` and `maintenance_enabled` from `site_settings`;
+- the deleted-account playtest-report identity constraint is present;
+- the `site_settings.id = 1` singleton row exists;
+- every current profile has an `account_progression` row;
+- the Supabase project reports healthy status and no advisor findings.
+
+The audit inspected schema metadata and boolean completeness checks only. It did not inspect account contents, expose credentials, or write to production.
+
+The Supabase dashboard still reports **No migrations** and **No backups**. Those are operational gaps, not evidence that the verified schema objects are missing.
 
 ## Maintenance verification
 
@@ -67,6 +89,7 @@ Maintenance mode is therefore confirmed to be enforced by the production request
 
 ## Recommended follow-up
 
-- establish a repeatable migration deployment process before adding shared-platform tables;
+- before the next database feature, establish a repeatable migration deployment process so the repository and production tracker cannot drift further;
+- evaluate backup and restore options before any high-risk schema change;
 - verify the production access-mode row and direct-route enforcement for PodBound Field;
 - configure and verify a custom SMTP provider before wider registration; application cooldowns, resend behavior, and the current built-in sender limit are documented in `docs/AUTH_EMAIL_RELIABILITY.md`.
